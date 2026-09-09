@@ -1,0 +1,117 @@
+# Kenyan counties with confirmed platform logistics.
+#
+# This file is the reason a vendor cannot be shown an encouraging answer about
+# a county where the platform cannot actually collect or deliver. The county
+# list in the product is read from here, not typed as free text, so an answer
+# about Wajir is impossible rather than merely unlikely.
+#
+# `has_logistics: false` counties are deliberately present. The product says
+# "we do not have delivery coverage there" rather than silently omitting the
+# county, because a vendor who cannot find their county assumes we are broken.
+
+counties:
+  - code: nairobi
+    name: Nairobi
+    tier: 1
+    has_logistics: true
+    wards:
+      - {code: cbd,        name: CBD,           note: "plaza retail, phone and electronics"}
+      - {code: gikomba,    name: Gikomba,       note: "thrift and fashion wholesale"}
+      - {code: eastleigh,  name: Eastleigh,     note: "textiles, electronics, wholesale"}
+      - {code: westlands,  name: Westlands,     note: "higher income retail"}
+      - {code: karen,      name: Karen,         note: "higher income retail"}
+      - {code: embakasi,   name: Embakasi,      note: "residential volume"}
+      - {code: kasarani,   name: Kasarani,      note: "residential volume"}
+      - {code: dagoretti,  name: Dagoretti,     note: "residential"}
+
+  - code: mombasa
+    name: Mombasa
+    tier: 1
+    has_logistics: true
+    wards:
+      - {code: nyali,      name: Nyali,         note: "higher income coastal retail"}
+      - {code: kongowea,   name: Kongowea,      note: "market trade"}
+      - {code: mvita,      name: Mvita,         note: "island CBD"}
+
+  - code: kiambu
+    name: Kiambu
+    tier: 1
+    has_logistics: true
+    wards:
+      - {code: thika,      name: Thika,         note: "industrial and retail town"}
+      - {code: ruiru,      name: Ruiru,         note: "Nairobi commuter belt"}
+      - {code: kikuyu,     name: Kikuyu,        note: "Nairobi commuter belt"}
+
+  - code: kisumu
+    name: Kisumu
+    tier: 1
+    has_logistics: true
+    wards:
+      - {code: kisumu_cbd, name: Kisumu CBD,    note: "lake region hub"}
+
+  - code: nakuru
+    name: Nakuru
+    tier: 1
+    has_logistics: true
+    wards:
+      - {code: nakuru_cbd, name: Nakuru CBD,    note: "rift valley hub"}
+      - {code: naivasha,   name: Naivasha,      note: "tourism and agriculture"}
+
+  - code: uasin_gishu
+    name: Uasin Gishu
+    tier: 2
+    has_logistics: true
+    wards:
+      - {code: eldoret,    name: Eldoret,       note: "north rift hub"}
+
+  - code: machakos
+    name: Machakos
+    tier: 2
+    has_logistics: true
+    wards:
+      - {code: athi_river, name: Athi River,    note: "industrial, warehousing"}
+      - {code: kitengela,  name: Kitengela,     note: "Nairobi commuter belt"}
+
+  - code: kajiado
+    name: Kajiado
+    tier: 2
+    has_logistics: true
+    wards:
+      - {code: ongata_rongai, name: Ongata Rongai, note: "Nairobi commuter belt"}
+      - {code: ngong,      name: Ngong,         note: "Nairobi commuter belt"}
+
+  - code: nyeri
+    name: Nyeri
+    tier: 2
+    has_logistics: true
+    wards: []
+
+  - code: meru
+    name: Meru
+    tier: 2
+    has_logistics: true
+    wards: []
+
+  - code: kakamega
+    name: Kakamega
+    tier: 2
+    has_logistics: true
+    wards: []
+
+  - code: kilifi
+    name: Kilifi
+    tier: 2
+    has_logistics: true
+    wards: []
+
+  - code: bungoma
+    name: Bungoma
+    tier: 3
+    has_logistics: true
+    wards: []
+
+  - code: kericho
+    name: Kericho
+    tier: 3
+    has_logistics: true
+    wards: []

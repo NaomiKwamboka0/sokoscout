@@ -1,0 +1,145 @@
+# What we may collect, per platform, and what we tell the vendor about it.
+#
+# Every entry here was verified against the platform's own published crawling
+# policy. The `caveat` text is not documentation: it is surfaced in the product
+# next to every number sourced from this platform. A vendor about to commit
+# stock can tell the difference between a figure from 1,200 observations and
+# one from 40, and hiding that distinction is how a tool like this permanently
+# loses trust.
+#
+# Verified 9 September 2026. Subject to change at the platforms' discretion,
+# which is why every source sits behind one swappable driver interface.
+
+platforms:
+  - code: jumia_ke
+    name: Jumia Kenya
+    granularity: product
+    active: true
+    base_url: https://www.jumia.co.ke
+    caveat: null
+    access:
+      # Verified against the live robots.txt on 9 September 2026. Their file
+      # opens with an unusually explicit statement: scraping is permitted if
+      # the user agent clearly identifies itself as a bot, carries an owner
+      # URL or contact, and stays under 200 requests per minute. We meet all
+      # three, and the user_agent below is what makes the first two true.
+      #
+      # Two corrections from the first draft of this file, both found by
+      # reading the live policy rather than assuming it:
+      #
+      #   /catalog/ is NOT blanket disallowed. Two specific endpoints under it
+      #   are explicitly allowed, and those are exactly the specifications and
+      #   ratings we want.
+      #
+      #   The rules are overwhelmingly query parameter based, not path prefix
+      #   based. Blocking by prefix alone would have missed almost all of them
+      #   while feeling thorough.
+      allowed_paths:
+        - /*.html
+        - /catalog/productspecifications/
+        - /catalog/productratingsreviews/
+        - /slp/nc/sitemap/
+
+      # Path prefixes their file disallows for the wildcard group. Seller and
+      # brand pages are here, which is why this driver never walks a seller's
+      # catalogue even though doing so would be an efficient way to find
+      # products.
+      disallowed_prefixes:
+        - /en/
+        - /mobapi/
+        - /customer/
+        - /checkout/
+        - /cart/
+
+      # Path fragments that may appear anywhere in the path. Their file writes
+      # these as */seller/ and similar, which a prefix check cannot express.
+      disallowed_fragments:
+        - /seller/
+        - /brands/
+        - /top-sellers/
+        - /all-products/
+        - /new-products/
+        - /special-price/
+        - /ratingreview/
+        - /fragment/
+        - /generic/
+        - /universal/
+        - /fashion-brand/
+        - /VoucherPage
+
+      # Any URL carrying one of these query parameters is a facet or a
+      # tracking link. Their file lists roughly two hundred of them; the
+      # matcher below treats any query string on a product URL as suspect
+      # rather than trying to enumerate the list here, because a list that
+      # falls behind theirs is worse than a rule.
+      disallow_query_strings: true
+
+      # They permit 200 requests per minute. We take about 40, because being
+      # permitted to go faster is not a reason to, and the whole crawl fits
+      # comfortably in a nightly window at this rate.
+      delay_seconds: 1.5
+      max_requests_per_minute: 40
+
+      # The real sitemap locations, read from their robots file. The first
+      # draft guessed /sitemap.xml, which does not exist.
+      sitemaps:
+        - https://static.jumia.co.ke/index-sitemap.xml
+        - https://www.jumia.co.ke/slp/nc/sitemap/sitemap.xml
+
+  - code: kilimall_ke
+    name: Kilimall Kenya
+    granularity: category
+    active: true
+    base_url: https://www.kilimall.co.ke
+    caveat: >-
+      Category level only. Kilimall's robots file disallows product pages, so
+      this price is a category range rather than a product median. Treat it as
+      coarser than the Jumia equivalent.
+    access:
+      allowed_paths:
+        - /new/category/
+      disallowed_prefixes:
+        - /listing/
+        - /product/
+        - /item/
+        - /api/
+      delay_seconds: 2.0
+      sitemaps:
+        - https://www.kilimall.co.ke/sitemap.xml
+
+  - code: glovo_ke
+    name: Glovo Kenya
+    granularity: product
+    active: false          # phase 5. Rendered client side, higher effort.
+    base_url: https://glovoapp.com
+    caveat: >-
+      Store level assortment, collected from the rendered page's own data
+      payload. Coverage varies by delivery address.
+    access:
+      delay_seconds: 2.0
+      sitemaps: []
+
+  - code: ubereats_ke
+    name: Uber Eats
+    granularity: manual
+    active: false
+    base_url: null
+    caveat: >-
+      Manually maintained, dated fact table. We do not crawl Uber Eats: it
+      refuses non browser requests and is actively bot protected.
+    access:
+      delay_seconds: null
+      sitemaps: []
+
+# Global collection discipline. These are not tunables to relax under
+# deadline pressure; each one exists because its absence cost the predecessor
+# project real time.
+collection:
+  user_agent: "SokoScoutBot/0.1 (+https://sokoscout.co.ke/bot; hello@sokoscout.co.ke)"
+  # An empty result set raises rather than passing. Anti bot systems signal
+  # throttling by returning nothing successfully, so a collector without this
+  # check looks perfectly healthy while collecting zero rows.
+  min_rows_per_run: 1
+  max_pages_per_run: 100
+  request_timeout_seconds: 20
+  max_retries: 3

@@ -1,0 +1,788 @@
+# Kenyan retail vocabulary, as explicit rules rather than a model.
+#
+# The same product is described as a power bank, a powerbank, a phone charger
+# and a portable charger. Classifying that correctly is the difference between
+# a median price over 1,200 real observations and a median over three
+# unrelated things.
+#
+# Deliberately rules and not a model, for two reasons that both matter more
+# than accuracy on an average case:
+#
+#   1. A wrong classification is fixed by editing one line here, by somebody
+#      who is not an engineer, and the fix is live on the next run.
+#   2. The same input always produces the same output. Reproducibility is what
+#      a vendor is actually paying for. A number that changes because a model
+#      was retrained is not a number they can commit stock against.
+#
+# `commission_rate` is the platform's own published rate, with the source and
+# the date it was read. It feeds the margin calculator, so a stale rate is a
+# wrong answer about somebody's money. Re-read the schedule quarterly.
+
+categories:
+  - code: phone_accessories
+    name: Phone Accessories
+    commission_rate: 0.11
+    commission_src: "Jumia Kenya seller commission schedule"
+    commission_read: 2026-09-09
+    keywords:
+      - phone case
+      - phone cover
+      - phone pouch
+      - back cover
+      - screen protector
+      - tempered glass
+      - screen guard
+      - phone holder
+      - car holder
+      - pop socket
+      - popsocket
+      - ring holder
+      - phone charm
+
+  - code: power_banks
+    name: Power Banks and Charging
+    commission_rate: 0.11
+    commission_src: "Jumia Kenya seller commission schedule"
+    commission_read: 2026-09-09
+    keywords:
+      # The canonical case from the proposal: four names, one product.
+      - power bank
+      - powerbank
+      - power-bank
+      - portable charger
+      - portable battery
+      - phone charger
+      - fast charger
+      - charging cable
+      - usb cable
+      - type c cable
+      - lightning cable
+      - charging brick
+      # A bare "adapter" was here and pulled HDMI adapters, SATA adapters and
+      # Bluetooth audio adapters into the power banks median: three different
+      # categories of product, all matching one word. Adapters are named by
+      # what they adapt, so the keywords have to be too.
+      - power adapter
+      - travel adapter
+      - charging adapter
+      - wall adapter
+      - extension cable
+
+  - code: audio
+    name: Audio
+    commission_rate: 0.11
+    commission_src: "Jumia Kenya seller commission schedule"
+    commission_read: 2026-09-09
+    keywords:
+      - earbud
+      - earbuds
+      - earphone
+      - earphones
+      - ear pods
+      - earpods
+      - airpod
+      - airpods
+      - headphone
+      - headphones
+      - headset
+      - bluetooth speaker
+      - portable speaker
+      - woofer
+      - subwoofer
+      - sound bar
+      - soundbar
+
+  - code: smartphones
+    name: Smartphones
+    commission_rate: 0.05
+    commission_src: "Jumia Kenya seller commission schedule"
+    commission_read: 2026-09-09
+    keywords:
+      - smartphone
+      - mobile phone
+      - feature phone
+      - kabambe          # the ubiquitous Kenyan term for a basic handset
+      - mulika mwizi     # same, colloquial
+      - android phone
+      - dual sim phone
+
+  - code: fashion_womens
+    name: Women's Fashion
+    commission_rate: 0.13
+    commission_src: "Jumia Kenya seller commission schedule"
+    commission_read: 2026-09-09
+    keywords:
+      - dress
+      - dresses
+      - maxi dress
+      - bodycon
+      - skirt
+      - blouse
+      - womens top
+      - ladies top
+      - jumpsuit
+      - two piece
+      - abaya
+      - hijab
+      - kitenge
+      - ankara
+      - leso
+      - kanga
+
+  - code: fashion_mens
+    name: Men's Fashion
+    commission_rate: 0.13
+    commission_src: "Jumia Kenya seller commission schedule"
+    commission_read: 2026-09-09
+    keywords:
+      - mens shirt
+      - official shirt
+      - t shirt
+      - tshirt
+      - trouser
+      - trousers
+      - chinos
+      - cargo pant
+      - cargo pants
+      - hoodie
+      - sweatshirt
+      - jacket
+      - suit
+      - blazer
+
+  - code: thrift
+    name: Thrift and Second Hand
+    commission_rate: 0.13
+    commission_src: "Jumia Kenya seller commission schedule"
+    commission_read: 2026-09-09
+    keywords:
+      - mtumba          # the standard Kenyan term for second hand clothing
+      - thrift
+      - thrifted
+      - second hand
+      - preloved
+      - pre loved
+      - camera bale
+      - bale
+
+  - code: footwear
+    name: Footwear
+    commission_rate: 0.13
+    commission_src: "Jumia Kenya seller commission schedule"
+    commission_read: 2026-09-09
+    keywords:
+      - sneaker
+      - sneakers
+      - rubber shoes
+      - ngoma           # colloquial Kenyan for sneakers
+      - sandal
+      - sandals
+      - open shoes
+      - loafer
+      - loafers
+      - official shoes
+      - boots
+      - heels
+      - flat shoes
+      - slippers
+      - crocs
+
+  - code: beauty
+    name: Beauty and Personal Care
+    commission_rate: 0.13
+    commission_src: "Jumia Kenya seller commission schedule"
+    commission_read: 2026-09-09
+    keywords:
+      - lipstick
+      - lip gloss
+      - foundation
+      - concealer
+      - face powder
+      - makeup
+      - make up
+      - body lotion
+      - body oil
+      - shea butter
+      - hair food
+      - hair oil
+      - braiding hair
+      - wig
+      - weave
+      - perfume
+      - cologne
+      - body spray
+      - deodorant
+
+      # Cosmetics the first live run surfaced and the original list missed.
+      - eyeliner
+      - eye liner
+      - mascara
+      - eyeshadow
+      - eye shadow
+      - shower gel
+      - body wash
+      - face wash
+      - lip balm
+      - nail polish
+
+  - code: home_kitchen
+    name: Home and Kitchen
+    commission_rate: 0.12
+    commission_src: "Jumia Kenya seller commission schedule"
+    commission_read: 2026-09-09
+    keywords:
+      - sufuria         # the standard Kenyan term for a cooking pot
+      - cooking pot
+      - non stick pan
+      - frying pan
+      - dinner set
+      - cutlery
+      - thermos
+      - flask
+      - water bottle
+      - storage container
+      - bedsheet
+      - bed sheet
+      - duvet
+      - curtain
+      - curtains
+      - carpet
+      - door mat
+      - jiko            # charcoal cooker, near universal
+      - gas cooker
+
+  - code: electronics_home
+    name: Home Electronics
+    commission_rate: 0.06
+    commission_src: "Jumia Kenya seller commission schedule"
+    commission_read: 2026-09-09
+    keywords:
+      - television
+      - smart tv
+      - led tv
+      - fridge
+      - refrigerator
+      - deep freezer
+      - microwave
+      - blender
+      - kettle
+      - electric kettle
+      - iron box
+      - washing machine
+      - air fryer
+      - water dispenser
+
+# ---------------------------------------------------------------------------
+# Expansion, 9 September 2026.
+#
+# Added after the first live collection run against Jumia showed that the
+# original eleven categories classified 0 of 12 real listings. The sitemap is
+# ordered by recency rather than by category, so a run returns a slice of the
+# whole catalogue: TV remotes, toys, pet supplies, laptop batteries.
+#
+# Every keyword below was drafted against real listing titles and then passed
+# through an adversarial review whose instruction was to REFUTE keywords
+# rather than approve them. That pass rejected 114 of 370 proposed keywords
+# (31%) for false-positive risk. What survives is deliberately conservative:
+# a missing keyword only shrinks a sample, while a wrong one corrupts a
+# median that somebody prices stock against.
+# ---------------------------------------------------------------------------
+
+  - code: tv_accessories
+    name: "TV & Decoder Accessories"
+    commission_rate: 0.08
+    commission_src: "Estimated, not from a published schedule"
+    commission_read: 2026-09-09
+    # Commission is an ESTIMATE. Confirm against the published
+    # schedule before any margin answer using it is trusted.
+    # 8 keyword(s) restored after checking the claimed
+    # collision with electronics_home did not actually exist.
+    keywords:
+      - decorder
+      - digital decorder
+      - decorder remote
+      - decoder remote
+      - satellite dish
+      - dish antenna
+      - set top box
+      - lnb
+      - tv remote
+      - remote for tv
+      - tv antenna
+      - tv aerial
+      - tv bracket
+      - tv mount
+      - tv wall mount
+      - wall mount for tv
+
+  - code: toys_games
+    name: "Toys & Games"
+    commission_rate: 0.11
+    commission_src: "Estimated, not from a published schedule"
+    commission_read: 2026-09-09
+    # Commission is an ESTIMATE. Confirm against the published
+    # schedule before any margin answer using it is trusted.
+    keywords:
+      - remote control car
+      - rc car
+      - board game
+      - uno card
+      - building blocks
+      - lego
+      - action figure
+      - teddy bear
+      - soft toy
+      - stuffed toy
+      - kids toy
+      - kids toys
+      - childrens toy
+      - toy gun
+      - construction truck
+
+  - code: baby_kids
+    name: "Baby and Kids Care and Safety"
+    commission_rate: 0.1
+    commission_src: "Estimated, not from a published schedule"
+    commission_read: 2026-09-09
+    # Commission is an ESTIMATE. Confirm against the published
+    # schedule before any margin answer using it is trusted.
+    keywords:
+      - diaper
+      - diapers
+      - pampers
+      - baby wipes
+      - wet wipes for baby
+      - baby bottle
+      - milk bottle for baby
+      - baby car seat
+      - child car seat
+      - infant car seat
+      - baby stroller
+      - pram
+      - baby pushchair
+      - baby carrier
+      - baby sling carrier
+      - baby cot
+      - baby walker
+      - baby monitor
+      - baby bath tub
+      - baby high chair
+      - breast pump
+      - baby bib
+
+      # Protective gear. Three of the seven listings the first live run could
+      # not classify were the same kids' helmet.
+      #
+      # A bare "helmet" rather than "kids helmet", because sellers write
+      # "kids decorated helmet" and a word in the middle defeats a two-word
+      # keyword. The collision to watch for is motorcycle helmets, which
+      # would belong to an automotive category this taxonomy does not have
+      # yet. Add one and this keyword must be narrowed at the same time.
+      - kids helmet
+      - childrens helmet
+      - kids decorated helmet
+      - decorated helmet
+      - protective gear
+      - knee pads
+      - elbow pads
+      - safety helmet
+      - kids helmet and pads
+
+  - code: bags_luggage
+    name: "Bags & Luggage"
+    commission_rate: 0.12
+    commission_src: "Estimated, not from a published schedule"
+    commission_read: 2026-09-09
+    # Commission is an ESTIMATE. Confirm against the published
+    # schedule before any margin answer using it is trusted.
+    keywords:
+      - handbag
+      - handbags
+      - hand bag
+      - hand bags
+      - shoulder bag
+      - shoulder bags
+      - backpack
+      - backpacks
+      - rucksack
+      - laptop bag
+      - laptop bags
+      - duffel bag
+      - duffle bag
+      - suitcase
+      - suitcases
+      - trolley bag
+      - cabin bag
+      - clutch bag
+      - sling bag
+      - crossbody bag
+      - cross body bag
+      - tote bag
+
+  - code: computing
+    name: "Computing & Laptop Accessories"
+    commission_rate: 0.06
+    commission_src: "Estimated, not from a published schedule"
+    commission_read: 2026-09-09
+    # Commission is an ESTIMATE. Confirm against the published
+    # schedule before any margin answer using it is trusted.
+    keywords:
+      - notebook computer
+      - desktop computer
+      - laptop battery
+      - laptop charger
+      - laptop adapter
+      - laptop power adapter
+      - laptop keyboard
+      - laptop bag
+      - laptop sleeve
+      - laptop stand
+      - computer monitor
+      - desktop monitor
+      - lcd monitor
+      - computer keyboard
+      - computer mouse
+      - wireless mouse
+      - usb mouse
+      - mouse pad
+      - laptop ram
+      - ddr3
+      - ddr4
+      - external hard drive
+      - toner cartridge
+      - wifi router
+
+  - code: storage_furniture
+    name: "Storage & Furniture"
+    commission_rate: 0.11
+    commission_src: "Estimated, not from a published schedule"
+    commission_read: 2026-09-09
+    # Commission is an ESTIMATE. Confirm against the published
+    # schedule before any margin answer using it is trusted.
+    keywords:
+      - shelving unit
+      - storage rack
+      - storage shelf
+      - wall shelf
+      - wall mounted shelf
+      - bookshelf
+      - book shelf
+      - shoe rack
+      - clothes rack
+      - chest of drawers
+      - cupboard
+      - sideboard
+      - coffee table
+      - dining table
+      - study table
+      - office desk
+      - office chair
+      - plastic chair
+      - dining chair
+      - seater sofa
+      - recliner
+      - bed frame
+      - bunk bed
+
+  - code: sports_outdoor
+    name: "Sports & Outdoor"
+    commission_rate: 0.11
+    commission_src: "Estimated, not from a published schedule"
+    commission_read: 2026-09-09
+    # Commission is an ESTIMATE. Confirm against the published
+    # schedule before any margin answer using it is trusted.
+    keywords:
+      - tennis racket
+      - badminton racket
+      - squash racket
+      - football jersey
+      - soccer jersey
+      - cricket bat
+      - netball
+      - volleyball
+      - rugby ball
+      - dumbbell
+      - dumbell
+      - kettlebell
+      - barbell
+      - weight plate
+      - yoga mat
+      - exercise mat
+      - gym mat
+      - skipping rope
+      - jump rope
+      - gym gloves
+      - goalkeeper gloves
+      - treadmill
+      - treadmil
+      - exercise bike
+      - resistance band
+      - shin guard
+      - shin pads
+      - camping tent
+      - hiking backpack
+      - swimming goggles
+
+  - code: pet_supplies
+    name: Pet Supplies
+    commission_rate: 0.11
+    commission_src: "Estimated, not from a published schedule"
+    commission_read: 2026-09-09
+    # Commission is an ESTIMATE. Confirm against the published
+    # schedule before any margin answer using it is trusted.
+    keywords:
+      - dog muzzle
+      - dog muzzles
+      - dog collar
+      - dog collars
+      - cat collar
+      - pet collar
+      - dog leash
+      - dog leashes
+      - pet leash
+      - dog harness
+      - pet harness
+      - dog food
+      - puppy food
+      - cat food
+      - pet food
+      - cat litter
+      - litter box
+      - dog bowl
+      - cat bowl
+      - pet bowl
+      - dog kennel
+      - dog bed
+      - pet shampoo
+      - dog shampoo
+      - flea collar
+      - dog treat
+      - dog treats
+      - rabbit cage
+      - fish tank
+      - cat tree
+      - scratching post
+
+  - code: tools_hardware
+    name: "Tools & Hardware"
+    commission_rate: 0.09
+    commission_src: "Estimated, not from a published schedule"
+    commission_read: 2026-09-09
+    # Commission is an ESTIMATE. Confirm against the published
+    # schedule before any margin answer using it is trusted.
+    keywords:
+      - power drill
+      - cordless drill
+      - drill machine
+      - screwdriver
+      - screw driver
+      - spanner
+      - hacksaw
+      - hand saw
+      - claw hammer
+      - tool box
+      - toolbox
+      - spirit level
+      - welding machine
+      - welding rod
+      - angle grinder
+      - extension socket
+      - socket extension
+      - power strip
+      - hanging scale
+      - crane scale
+      - wheelbarrow
+      - hydraulic jack
+      - vice grip
+      - plier
+      - pliers
+
+  - code: musical_instruments
+    name: Musical Instruments
+    commission_rate: 0.09
+    commission_src: "Estimated, not from a published schedule"
+    commission_read: 2026-09-09
+    # Commission is an ESTIMATE. Confirm against the published
+    # schedule before any margin answer using it is trusted.
+    keywords:
+      - keyboard piano
+      - musical keyboard
+      - digital piano
+      - electric piano
+      - acoustic guitar
+      - electric guitar
+      - bass guitar
+      - guitar string
+      - guitar strings
+      - guitar capo
+      - guitar pick
+      - guitar tuner
+      - saxophone
+      - saxophone reed
+      - clarinet
+      - clarinet reed
+      - violin
+      - ukulele
+      - trombone
+      - drum set
+      - drum kit
+      - snare drum
+      - djembe
+      - kalimba
+      - melodica
+      - harmonica
+      - nyatiti
+
+  - code: innerwear
+    name: "Innerwear & Sleepwear"
+    commission_rate: 0.12
+    commission_src: "Estimated, not from a published schedule"
+    commission_read: 2026-09-09
+    # Commission is an ESTIMATE. Confirm against the published
+    # schedule before any margin answer using it is trusted.
+    keywords:
+      - panties
+      - panty
+      - pantie
+      - boxer shorts
+      - boxer briefs
+      - briefs underwear
+      - mens briefs
+      - underwear
+      - under wear
+      - innerwear
+      - inner wear
+      - bras
+      - sports bra
+      - push up bra
+      - bralette
+      - lingerie
+      - pyjamas
+      - pajamas
+      - nightdress
+      - night dress
+      - nighty
+      - nightie
+      - nightwear
+      - sleepwear
+      - shapewear
+      - body shaper
+      - pantyhose
+      - boxer trunk
+      - thong underwear
+
+# ---------------------------------------------------------------------------
+# Accessory guard.
+#
+# A real failure from the first live run, and the reason this section exists:
+#
+#   "Universal Charging Plug For Kids Toy Cars"
+#
+# is a charger. It matched the toys keyword "kids toy" because that phrase
+# appears inside "Kids Toy Cars", and a 2,499 shilling charger landed in the
+# toys median. The adversarial review of the taxonomy predicted exactly this
+# and it happened anyway, because keyword matching alone cannot tell an item
+# apart from an accessory FOR that item.
+#
+# The rule: when a title contains one of these accessory words, the listing is
+# an accessory to the thing it names, not the thing itself. It is reassigned
+# to the category that owns the accessory word, or left unclassified if no
+# category claims it.
+#
+# Written as data rather than code so the same person who edits keywords can
+# fix a misclassification here too.
+# Each marker names the accessory UNAMBIGUOUSLY, without assuming what it is
+# an accessory for. "charger" is a charger whatever it charges. "case for" is
+# NOT here, because a case can be for a phone, a guitar, a camera or a laptop,
+# and assuming phone put guitar cases and sofa covers into the phone
+# accessories median in review.
+#
+# The rule for adding one: if you can finish the sentence "a <marker> is
+# always a ___" with a single category, it belongs here. If the answer depends
+# on what follows the word, it does not.
+accessory_markers:
+  charger: power_banks
+  charging plug: power_banks
+  charging cable: power_banks
+  charging cord: power_banks
+  power adapter: power_banks
+  power bank: power_banks
+  replacement battery: power_banks
+  spare battery: power_banks
+  phone case: phone_accessories
+  phone cover: phone_accessories
+  screen protector: phone_accessories
+
+# Markers that only apply when the title also names the thing they belong to.
+# "case" alone is ambiguous; "case for samsung" is not.
+#
+# Written as marker -> {owner, requires} so the ambiguity is resolved by
+# evidence in the title rather than by an assumption in the code.
+qualified_accessory_markers:
+  - marker: "case for"
+    owner: phone_accessories
+    requires: [phone, samsung, iphone, tecno, infinix, oppo, redmi, xiaomi,
+               huawei, nokia, itel, vivo, realme, pixel, galaxy]
+  - marker: "cover for"
+    owner: phone_accessories
+    requires: [phone, samsung, iphone, tecno, infinix, oppo, redmi, xiaomi,
+               huawei, nokia, itel, vivo, realme, pixel, galaxy]
+  - marker: "remote control for"
+    owner: tv_accessories
+    requires: [tv, television, decoder, decorder, dstv, gotv, startimes]
+
+# Categories the accessory guard must never override. These legitimately sell
+# the accessory itself as their main product, so redirecting them would be the
+# mirror image of the bug.
+accessory_guard_exempt:
+  - power_banks
+  - phone_accessories
+  - tv_accessories
+  - computing
+
+# ---------------------------------------------------------------------------
+# Condition overrides.
+#
+# Some categories describe the CONDITION of a thing rather than what the thing
+# is, and condition beats product type for pricing. A bale of second hand
+# dresses is priced as thrift, not as dresses; the two medians are not close.
+#
+# Hit counting alone gets this backwards, because a thrift listing names its
+# garments repeatedly and its condition once:
+#
+#   "Camera Bale Dresses Skirts Blouse"
+#      fashion_womens: 3 hits    thrift: 1 hit    ->  fashion_womens
+#
+# That put a wholesale thrift bale into the retail womenswear median. So a
+# category listed here wins whenever it matches at all, regardless of how
+# many keywords another category matched.
+condition_overrides:
+  - thrift
+
+# ---------------------------------------------------------------------------
+# Price vocabulary. Kenyan listings write prices in forms a plain number parser
+# silently gets wrong, and a silently wrong price is worse than no price.
+# ---------------------------------------------------------------------------
+price_forms:
+  currency_prefixes: ["KSh", "Ksh", "KES", "Kshs", "ksh", "kes", "/=", "/-"]
+  # "1.5k" means 1,500. A naive float parse yields 1.5, which is not a price
+  # anybody in this market has ever charged for anything.
+  thousand_suffixes: ["k", "K"]
+  # Ranges are common on category pages: "KSh 500 - KSh 1,200".
+  range_separators: [" - ", " to ", " – "]
+
+# Words that mean this listing is not a physical good we can price. A service
+# priced per hour has no place in a product median.
+service_markers:
+  - salon
+  - saloon
+  - barber
+  - spa
+  - massage
+  - consultation
+  - booking
+  - repair service
+  - installation
+  - training
+  - course
+  - tuition

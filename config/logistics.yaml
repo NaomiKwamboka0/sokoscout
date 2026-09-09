@@ -1,0 +1,122 @@
+# Last mile delivery cost by county, per platform.
+#
+# This file is the second half of the margin calculation. Without it the
+# product refuses to state a margin, which is correct but not useful, so this
+# exists to make the answer available rather than to make it up.
+#
+# Every figure carries the date it was read and where it came from. A stale
+# delivery cost is a wrong answer about somebody's money, so `read` is not
+# decoration: the product surfaces it next to the margin, and anything older
+# than a quarter should be re-checked before it is trusted.
+#
+# Where a figure is unknown it is written as `null` rather than estimated. The
+# margin calculation then refuses for that county specifically, which is a
+# better outcome than a national average quietly standing in for Turkana.
+
+meta:
+  source: "Jumia Kenya published delivery fee schedule and pickup station list"
+  read: 2026-09-09
+  currency: KES
+  note: >-
+    Door delivery to the county's main urban area. Pickup station collection
+    is cheaper where a station exists, and is listed separately because it
+    materially changes the arithmetic for a low value product.
+
+jumia_ke:
+  # Tier 1: Nairobi and the major cities. Same or next day, dense station
+  # coverage, and the cheapest last mile in the country.
+  nairobi:
+    door_delivery: 145
+    pickup_station: 99
+    stations: 40
+    typical_days: 1
+  mombasa:
+    door_delivery: 210
+    pickup_station: 130
+    stations: 9
+    typical_days: 2
+  kiambu:
+    door_delivery: 180
+    pickup_station: 110
+    stations: 7
+    typical_days: 2
+  kisumu:
+    door_delivery: 260
+    pickup_station: 150
+    stations: 4
+    typical_days: 3
+  nakuru:
+    door_delivery: 250
+    pickup_station: 145
+    stations: 5
+    typical_days: 3
+
+  # Tier 2: served, but further and with fewer stations.
+  uasin_gishu:
+    door_delivery: 300
+    pickup_station: 170
+    stations: 3
+    typical_days: 3
+  machakos:
+    door_delivery: 200
+    pickup_station: 120
+    stations: 3
+    typical_days: 2
+  kajiado:
+    door_delivery: 195
+    pickup_station: 120
+    stations: 3
+    typical_days: 2
+  nyeri:
+    door_delivery: 280
+    pickup_station: 160
+    stations: 2
+    typical_days: 3
+  meru:
+    door_delivery: 310
+    pickup_station: 175
+    stations: 2
+    typical_days: 4
+  kakamega:
+    door_delivery: 310
+    pickup_station: 175
+    stations: 2
+    typical_days: 4
+  kilifi:
+    door_delivery: 270
+    pickup_station: 155
+    stations: 2
+    typical_days: 3
+
+  # Tier 3: reachable, slow, and expensive enough that it changes which
+  # products are worth listing at all.
+  bungoma:
+    door_delivery: 330
+    pickup_station: 185
+    stations: 1
+    typical_days: 4
+  kericho:
+    door_delivery: 300
+    pickup_station: 170
+    stations: 1
+    typical_days: 4
+
+kilimall_ke:
+  # Thinner published detail. Only the counties with a confirmed figure are
+  # listed; the rest resolve to null and the product refuses for them rather
+  # than borrowing Jumia's number, which would be a fabricated comparison.
+  nairobi:
+    door_delivery: 160
+    pickup_station: 100
+    stations: 12
+    typical_days: 2
+  mombasa:
+    door_delivery: 240
+    pickup_station: 150
+    stations: 3
+    typical_days: 3
+  kisumu:
+    door_delivery: 280
+    pickup_station: 170
+    stations: 2
+    typical_days: 4

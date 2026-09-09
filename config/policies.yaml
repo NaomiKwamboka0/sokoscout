@@ -1,0 +1,210 @@
+# Platform policies and the cost of doing business on each.
+#
+# This is the document corpus behind every qualitative answer: commissions,
+# payout timing, onboarding requirements, returns, and the fees that do not
+# appear in a commission rate but still come out of a vendor's money.
+#
+# Every fact carries `source` and `read`. That is not decoration. A vendor
+# decides where to list based on these numbers, and a stale figure is a wrong
+# answer about their money. Anything read more than a quarter ago should be
+# re-checked before it is quoted.
+#
+# Where a figure is not confirmed it is written as `null` with a note, and the
+# product says it does not know rather than estimating. The whole reason a
+# vendor would trust this over a forum post is that it does not guess.
+
+meta:
+  read: 2026-09-09
+  currency: KES
+  confidence: >-
+    Commission bands and fee structures are compiled from each platform's
+    published seller documentation. Individual sellers negotiate different
+    rates at volume, so treat these as the list price rather than as the rate
+    a large vendor would actually pay.
+
+platforms:
+
+  jumia_ke:
+    name: Jumia Kenya
+    source: "Jumia Kenya seller centre documentation and published fee schedule"
+    read: 2026-09-09
+
+    commission:
+      # Per-category rates live in taxonomy.yaml, which is what the margin
+      # calculator reads. This is the range, for the comparison view.
+      range_low: 0.05
+      range_high: 0.13
+      note: >-
+        Varies by category. Electronics and phones sit at the low end because
+        the ticket size is large; fashion, beauty and accessories at the high
+        end. The per-category figure is in taxonomy.yaml.
+
+    fees:
+      - name: Commission
+        basis: percent_of_sale
+        value: null          # see commission range above
+        note: "Category dependent. The single largest cost."
+      - name: Fulfilment by Jumia storage
+        basis: per_unit_per_month
+        value: 20
+        note: "Only if using Jumia's warehouse. Self-fulfilment avoids it."
+      - name: Payment processing
+        basis: included
+        value: 0
+        note: "Included in commission; not billed separately."
+      - name: Return handling
+        basis: per_return
+        value: 150
+        note: >-
+          Charged on buyer-initiated returns outside the seller's fault.
+          Materially higher on pay-on-delivery orders, where refusal at the
+          door is common.
+
+    payout:
+      cycle_days: 14
+      note: >-
+        Roughly fortnightly after delivery confirmation. Pay on delivery
+        orders confirm later than prepaid ones, so the effective cash cycle
+        on a POD-heavy category is longer than the headline figure.
+      cash_cycle_warning: >-
+        Pay on delivery is the dominant payment method in this market. A
+        vendor financing stock should plan for cash out for 3 to 6 weeks
+        between paying a supplier and being paid by the platform.
+
+    onboarding:
+      requirements:
+        - "Kenyan national ID or passport"
+        - "KRA PIN certificate"
+        - "Registered business name or certificate of incorporation"
+        - "Bank account in the trading name"
+        - "At least one product with photographs meeting the image spec"
+      typical_days: 5
+      cost: 0
+      note: "No listing fee and no monthly seller subscription."
+
+    returns:
+      window_days: 7
+      who_pays: "Platform, where the return is a platform or seller fault; seller otherwise."
+      note: >-
+        The return rate, not the return policy, is what determines the real
+        cost. Fashion and footwear run materially higher than electronics
+        because of sizing.
+
+  kilimall_ke:
+    name: Kilimall Kenya
+    source: "Kilimall Kenya seller documentation"
+    read: 2026-09-09
+
+    commission:
+      range_low: 0.05
+      range_high: 0.12
+      note: >-
+        Broadly comparable to Jumia and slightly lower in several categories.
+        Kilimall's smaller buyer base is the offsetting factor, so a lower
+        commission on fewer orders is not automatically the better deal.
+
+    fees:
+      - name: Commission
+        basis: percent_of_sale
+        value: null
+        note: "Category dependent."
+      - name: Payment processing
+        basis: included
+        value: 0
+      - name: Return handling
+        basis: per_return
+        value: null
+        note: "Not confirmed in published documentation. We do not estimate it."
+
+    payout:
+      cycle_days: 15
+      note: "Semi-monthly, after delivery confirmation."
+
+    onboarding:
+      requirements:
+        - "Kenyan national ID or passport"
+        - "KRA PIN certificate"
+        - "Bank account or mobile money account"
+      typical_days: 3
+      cost: 0
+      note: >-
+        Lighter documentation than Jumia. A sole trader without a registered
+        business name can generally onboard here first.
+
+    returns:
+      window_days: 7
+      who_pays: "Case by case."
+      note: "Published policy is less specific than Jumia's."
+
+  glovo_ke:
+    name: Glovo Kenya
+    source: "Glovo partner documentation"
+    read: 2026-09-09
+
+    commission:
+      range_low: 0.15
+      range_high: 0.30
+      note: >-
+        Substantially higher than the marketplaces, because this is on-demand
+        delivery rather than listing. The comparison is not like for like: a
+        Glovo order is fulfilled within the hour by a courier, which is a
+        different service being paid for.
+
+    fees:
+      - name: Commission
+        basis: percent_of_sale
+        value: null
+        note: "Negotiated per partner. The range above is indicative."
+      - name: Delivery
+        basis: paid_by_customer
+        value: 0
+        note: "Borne by the buyer, not deducted from the vendor."
+
+    payout:
+      cycle_days: 7
+      note: "Weekly. The fastest cash cycle of the four, which partly offsets the commission."
+
+    onboarding:
+      requirements:
+        - "Registered business"
+        - "KRA PIN certificate"
+        - "Physical premises within a served delivery zone"
+        - "Food handling licence for prepared food"
+      typical_days: 10
+      cost: 0
+      note: >-
+        Requires physical premises in a served zone, so it is not open to a
+        vendor operating from home or shipping from abroad.
+
+    returns:
+      window_days: 0
+      who_pays: "Case by case, handled as an order dispute."
+      note: "Immediate delivery model; returns are refunds rather than shipped returns."
+
+  ubereats_ke:
+    name: Uber Eats
+    source: "Not verified. We do not crawl this platform."
+    read: 2026-09-09
+
+    commission:
+      range_low: null
+      range_high: null
+      note: >-
+        Not confirmed. Uber Eats refuses non-browser requests and is bot
+        protected, so we have no verified figures for it and will not quote
+        an estimate. It is listed here so a vendor asking about it is told we
+        do not cover it, rather than finding it silently missing.
+
+    fees: []
+    payout:
+      cycle_days: null
+      note: "Not confirmed."
+    onboarding:
+      requirements: []
+      typical_days: null
+      cost: null
+      note: "Not confirmed."
+    returns:
+      window_days: null
+      who_pays: null
+      note: "Not confirmed."

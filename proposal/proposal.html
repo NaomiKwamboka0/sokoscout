@@ -1,0 +1,1175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SokoScout — Investment Proposal</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm 20mm 16mm; }
+
+  :root {
+    --ink:      #14181f;
+    --ink-soft: #4a5361;
+    --ink-faint:#7d8794;
+    --rule:     #dfe3e9;
+    --rule-soft:#eef1f5;
+    --accent:   #0b7a63;
+    --accent-lt:#e6f4f0;
+    --warn:     #b0530f;
+    --warn-lt:  #fdf1e6;
+    --stop:     #a32020;
+    --stop-lt:  #fbecec;
+    --paper:    #ffffff;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 10.2pt/1.55 "Georgia", "Iowan Old Style", "Times New Roman", serif;
+    font-feature-settings: "kern" 1, "liga" 1, "onum" 1;
+  }
+
+  /* ---------- structure ---------- */
+
+  section { page-break-before: always; break-before: page; }
+  section.cover, section:first-of-type { page-break-before: avoid; break-before: avoid; }
+  section.flow { page-break-before: auto; break-before: auto; }
+
+  h1, h2, h3, h4, .eyebrow, .lede, table, .tag, .pill, .metric b, .eco th, .eco td {
+    font-family: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+
+  h2 {
+    font-size: 16.5pt;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    margin: 0 0 2mm;
+    font-weight: 650;
+  }
+  h3 {
+    font-size: 11.4pt;
+    letter-spacing: -0.005em;
+    margin: 7mm 0 2mm;
+    font-weight: 640;
+    page-break-after: avoid;
+  }
+  h4 {
+    font-size: 9.6pt;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--ink-faint);
+    margin: 6mm 0 1.5mm;
+    font-weight: 620;
+    page-break-after: avoid;
+  }
+  p { margin: 0 0 2.6mm; }
+  p.lede {
+    font-size: 11pt;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin-bottom: 5mm;
+    max-width: 62ch;
+  }
+
+  .eyebrow {
+    font-size: 8.2pt;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--accent);
+    font-weight: 650;
+    margin: 0 0 2mm;
+  }
+
+  .secnum {
+    display: inline-block;
+    font-family: "Inter", "Segoe UI", sans-serif;
+    font-size: 8.2pt;
+    font-weight: 650;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    border: 0.4mm solid var(--accent);
+    border-radius: 1mm;
+    padding: 0.4mm 1.6mm;
+    margin-bottom: 2.5mm;
+  }
+
+  hr.rule { border: 0; border-top: 0.35mm solid var(--rule); margin: 5mm 0; }
+
+  ul, ol { margin: 0 0 3mm; padding-left: 5mm; }
+  li { margin-bottom: 1.4mm; }
+  strong { font-weight: 700; color: var(--ink); }
+  em { font-style: italic; }
+
+  a { color: var(--accent); text-decoration: none; }
+
+  .small { font-size: 8.6pt; line-height: 1.45; color: var(--ink-faint); }
+  .note {
+    font-size: 8.6pt;
+    line-height: 1.45;
+    color: var(--ink-soft);
+    border-left: 0.7mm solid var(--rule);
+    padding-left: 3mm;
+    margin: 3mm 0;
+  }
+
+  .callout {
+    background: var(--accent-lt);
+    border-left: 1mm solid var(--accent);
+    padding: 3mm 4mm;
+    margin: 4mm 0;
+    page-break-inside: avoid;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout.warn { background: var(--warn-lt); border-left-color: var(--warn); }
+  .callout.stop { background: var(--stop-lt); border-left-color: var(--stop); }
+
+  /* ---------- cover ---------- */
+
+  .cover {
+    height: 247mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .cover-mark {
+    display: flex; align-items: center; gap: 3mm;
+    font-family: "Inter", "Segoe UI", sans-serif;
+    font-weight: 700; font-size: 13pt; letter-spacing: -0.01em;
+  }
+  .cover-mark .dot {
+    width: 7mm; height: 7mm; border-radius: 50%;
+    background: var(--accent);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 8pt; font-weight: 700;
+  }
+  .cover h1 {
+    font-family: "Inter", "Segoe UI", sans-serif;
+    font-size: 33pt;
+    line-height: 1.06;
+    letter-spacing: -0.028em;
+    font-weight: 680;
+    margin: 0 0 5mm;
+    max-width: 21ch;
+  }
+  .cover .sub {
+    font-size: 12.4pt;
+    line-height: 1.45;
+    color: var(--ink-soft);
+    max-width: 52ch;
+    margin: 0 0 8mm;
+  }
+  .cover-meta {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4mm;
+    border-top: 0.4mm solid var(--rule);
+    padding-top: 4mm;
+    font-family: "Inter", "Segoe UI", sans-serif;
+    font-size: 8.4pt;
+  }
+  .cover-meta span { display: block; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.1em; font-size: 7.4pt; margin-bottom: 1mm; }
+  .cover-meta b { font-weight: 620; }
+
+  .conf {
+    font-family: "Inter", "Segoe UI", sans-serif;
+    font-size: 7.8pt;
+    color: var(--ink-faint);
+    letter-spacing: 0.02em;
+  }
+
+  /* ---------- tables ---------- */
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8.7pt;
+    margin: 3mm 0 4mm;
+    page-break-inside: avoid;
+  }
+  th {
+    text-align: left;
+    font-weight: 640;
+    font-size: 7.6pt;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-faint);
+    border-bottom: 0.5mm solid var(--ink);
+    padding: 0 2.2mm 1.6mm 0;
+    vertical-align: bottom;
+  }
+  td {
+    padding: 2mm 2.2mm 2mm 0;
+    border-bottom: 0.3mm solid var(--rule-soft);
+    vertical-align: top;
+    line-height: 1.42;
+  }
+  tr:last-child td { border-bottom: 0.35mm solid var(--rule); }
+  td:last-child, th:last-child { padding-right: 0; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  table.eco td, table.eco th { font-family: "Inter", "Segoe UI", sans-serif; }
+  table.tight td { padding: 1.4mm 2.2mm 1.4mm 0; }
+
+  .tag {
+    display: inline-block;
+    font-size: 7.2pt;
+    font-weight: 650;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.5mm 1.6mm;
+    border-radius: 0.8mm;
+    white-space: nowrap;
+  }
+  .tag.ok   { background: var(--accent-lt); color: var(--accent); }
+  .tag.mid  { background: var(--warn-lt);   color: var(--warn); }
+  .tag.no   { background: var(--stop-lt);   color: var(--stop); }
+
+  /* ---------- metric row ---------- */
+
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3mm;
+    margin: 4mm 0 5mm;
+    page-break-inside: avoid;
+  }
+  .metric {
+    border-top: 0.7mm solid var(--accent);
+    padding-top: 2mm;
+  }
+  .metric b {
+    display: block;
+    font-size: 17pt;
+    font-weight: 660;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin-bottom: 1mm;
+  }
+  .metric span {
+    display: block;
+    font-family: "Inter", "Segoe UI", sans-serif;
+    font-size: 7.8pt;
+    line-height: 1.35;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- two column ---------- */
+
+  .cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 7mm; }
+  .cols2.wide-left { grid-template-columns: 1.25fr 1fr; }
+
+  /* ---------- phone mockups ---------- */
+
+  .screens {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4mm;
+    margin: 4mm 0 3mm;
+    page-break-inside: avoid;
+  }
+  .screen figcaption {
+    font-family: "Inter", "Segoe UI", sans-serif;
+    font-size: 7.6pt;
+    line-height: 1.35;
+    color: var(--ink-soft);
+    margin-top: 2mm;
+  }
+  .screen figcaption b { display: block; color: var(--ink); font-weight: 640; font-size: 8.2pt; margin-bottom: 0.6mm; }
+  .screen svg { width: 100%; height: auto; display: block; }
+  figure { margin: 0; }
+
+  figure.diagram { margin: 4mm 0; page-break-inside: avoid; }
+  figure.diagram svg { width: 100%; height: auto; display: block; }
+  figure.diagram figcaption { font-family: "Inter","Segoe UI",sans-serif; font-size: 7.8pt; color: var(--ink-faint); margin-top: 2mm; }
+
+  .avoid-break { page-break-inside: avoid; }
+
+  /* screen preview only */
+  @media screen {
+    body { background: #eceff3; padding: 10mm 0; }
+    section {
+      width: 210mm; min-height: 297mm;
+      padding: 18mm 16mm 20mm;
+      margin: 0 auto 8mm;
+      background: #fff;
+      box-shadow: 0 1mm 4mm rgba(0,0,0,.14);
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<section class="cover">
+  <div>
+    <div class="cover-mark"><span class="dot">S</span> SokoScout</div>
+  </div>
+
+  <div>
+    <p class="eyebrow">Investment proposal</p>
+    <h1>Should you sell in Kenya?</h1>
+    <p class="sub">Every week, vendors across the world commit stock to Kenyan e-commerce without knowing what anything sells for, who they are competing against, or which platform will actually move their product. SokoScout answers those questions from real marketplace data, on a phone, for the price of a cup of coffee.</p>
+
+    <div class="cover-meta">
+      <div><span>Prepared by</span><b>Leonard Kinyera</b></div>
+      <div><span>Date</span><b>9 September 2026</b></div>
+      <div><span>Stage</span><b>Pre seed, working prototype</b></div>
+      <div><span>Market</span><b>Kenya, vendors global</b></div>
+    </div>
+  </div>
+
+  <p class="conf">Confidential. Prepared for prospective investors and commercial partners. Contains unreleased product and pricing detail.</p>
+</section>
+
+
+<!-- ============ 1. THE PROBLEM ============ -->
+<section>
+  <div class="secnum">01</div>
+  <h2>The problem</h2>
+  <p class="lede">A vendor deciding whether to enter Kenyan e-commerce is making a stock purchase decision with almost no information. The decision is expensive, it is made in the dark, and it is made constantly.</p>
+
+  <p>Picture a trading company in Guangzhou with a container of wireless earbuds. They know Kenya is a growing market. They do not know what an earbud sells for in Nairobi, how many sellers already list one, whether the category is saturated, what Jumia takes in commission, what last mile delivery costs, or whether the buyer will pay on delivery in cash. So they guess.</p>
+
+  <p>The same is true of a Turkish homeware exporter, a Nigerian phone accessory distributor, and a Kenyan in the diaspora who wants to start selling back home. They are all standing at the same window with the same question, and none of them can see through it.</p>
+
+  <h3>What they do instead</h3>
+  <p>Today the research options are all bad:</p>
+  <ul>
+    <li><strong>Browse the marketplaces by hand.</strong> Open Jumia, search a keyword, eyeball ten prices. This gives a feeling, not a number, and it captures one moment rather than a trend. It also cannot count sellers or measure saturation.</li>
+    <li><strong>Ask in a group chat.</strong> Anecdote from whoever answers, weighted by how confident they sound.</li>
+    <li><strong>Buy a market report.</strong> Expensive, generic, usually a year old, and written at country level rather than at the level of the actual product they intend to ship.</li>
+    <li><strong>Hire a local consultant.</strong> Works, and costs more than the first shipment's margin.</li>
+    <li><strong>Ship and find out.</strong> The most common option, and the reason so much stock sits unsold in Nairobi warehouses.</li>
+  </ul>
+
+  <h3>Why the cost is high</h3>
+  <p>These are not idle questions. Getting them wrong has three specific expensive outcomes, and each one is common enough that anybody in Kenyan e-commerce can name examples.</p>
+
+  <table>
+    <thead><tr><th style="width:26%">Failure</th><th>What actually happens</th><th style="width:22%">Cost to the vendor</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Priced wrong</strong></td>
+        <td>Lands at a price the market will not pay, because the reference price used was a European or Nigerian one. Sits unsold, then gets discounted below cost to clear.</td>
+        <td>Margin gone, sometimes the whole consignment</td>
+      </tr>
+      <tr>
+        <td><strong>Entered a saturated category</strong></td>
+        <td>Picks a category that looks large because there is a lot of it, when volume is a symptom of two hundred sellers already fighting over the same buyer.</td>
+        <td>Immediate price war, no route to a margin</td>
+      </tr>
+      <tr>
+        <td><strong>Wrong platform</strong></td>
+        <td>Lists on a marketplace when the product actually moves through on demand delivery, or ships to a county where the platform has no collection point, so the listing never converts.</td>
+        <td>Months lost, then a second setup cost</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <p><strong>The gap in one sentence.</strong> The data needed to answer these questions is already public and already sitting on the marketplaces. Nobody has assembled it into something a vendor can simply ask a question of.</p>
+  </div>
+</section>
+
+
+<!-- ============ 2. THE INSIGHT ============ -->
+<section>
+  <div class="secnum">02</div>
+  <h2>The insight, and why this is buildable now</h2>
+  <p class="lede">Three things became true recently, and together they make a product that would not have worked two years ago.</p>
+
+  <h3>One. The answer is already published</h3>
+  <p>Kenyan marketplaces publish their catalogues to be found. Jumia Kenya maintains public sitemaps precisely so that search engines can index its products, and its own robots file explicitly permits crawling product pages, specifications, and ratings. Commission schedules and seller terms are published documents. This is not private data and it does not need to be obtained by trickery. It needs to be collected, structured, and kept over time.</p>
+
+  <h3>Two. Time series is the part nobody has</h3>
+  <p>A single snapshot of prices is mildly useful. A record of what a category's prices did over the last two quarters is a different product: it shows direction, seasonality, and whether new entrants are pushing prices down. Nobody can acquire that retroactively. It only exists if somebody started collecting it, which means the value of the asset compounds from the day the crawler first runs.</p>
+
+  <h3>Three. Asking in plain language finally became practical to build</h3>
+  <p>Structured market data has always been unusable by the people who need it most, because using it required knowing how to query a database. A vendor does not want a dashboard with forty filters. They want to ask a question in their own words and get an answer. Retrieval techniques and small open weights models that run on ordinary hardware made that interaction buildable, and affordable to operate, only recently. It is what turns a database into a product.</p>
+
+  <div class="callout warn">
+    <p><strong>The trap we deliberately avoid.</strong> The obvious build is to feed scraped pages to a language model and let it answer. That produces confident, plausible, wrong numbers, because language models do not do arithmetic reliably and will happily invent an average. Our architecture never asks the model to compute anything. The database computes every number; the model chooses which question to ask of it and explains the result. This is covered in section 5 and it is the single most important engineering decision in the product.</p>
+  </div>
+
+  <h3>Why Kenya, and why now</h3>
+  <p>Kenya is the right first market rather than an arbitrary one:</p>
+  <ul>
+    <li><strong>It is the market that is winning.</strong> Glovo opened a Nairobi headquarters in 2026 and committed a further KES 10 billion to Kenya through 2030, describing Kenya as by a clear margin its strongest African market. That is a platform voting with its balance sheet.</li>
+    <li><strong>Consolidation makes platform choice matter more.</strong> Uber withdrew from Nigeria and Uganda in 2026 while holding Kenya. When platforms are entering and exiting, the question of which one to build on stops being academic.</li>
+    <li><strong>Mobile money removes the payment excuse.</strong> A 200 shilling subscription is collectable from a Kenyan seller by M Pesa and from a foreign vendor by card, through one integration.</li>
+    <li><strong>The buyer is mobile only.</strong> So is the vendor we are selling to. A phone first product is the correct product, not a compromise.</li>
+  </ul>
+
+  <p class="small">Sources: Glovo Kenya headquarters and investment commitment, tech-ish.com, May 2026. Uber market withdrawals from Nigeria and Uganda, Techweez and TechCabal, September 2026. Jumia Kenya robots and sitemap policy, retrieved 9 September 2026.</p>
+</section>
+
+
+<!-- ============ 3. THE PRODUCT ============ -->
+<section>
+  <div class="secnum">03</div>
+  <h2>The product</h2>
+  <p class="lede">A vendor signs up, picks where in Kenya they care about, asks a question in their own words, and gets a number with its evidence attached. Four screens, built for a phone.</p>
+
+  <div class="screens">
+
+    <!-- SCREEN 1: sign in -->
+    <figure class="screen">
+      <svg viewBox="0 0 132 250" role="img" aria-label="Sign in screen mockup">
+        <rect x="1" y="1" width="130" height="248" rx="12" fill="#fff" stroke="#c9cfd8" stroke-width="1"/>
+        <rect x="1" y="1" width="130" height="18" rx="12" fill="#f4f6f9"/>
+        <rect x="52" y="8" width="28" height="3.5" rx="1.75" fill="#c9cfd8"/>
+        <circle cx="26" cy="42" r="8.5" fill="#0b7a63"/>
+        <text x="26" y="45.5" font-family="Inter,sans-serif" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">S</text>
+        <text x="40" y="45.5" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#14181f">SokoScout</text>
+        <text x="14" y="66" font-family="Inter,sans-serif" font-size="7.5" font-weight="600" fill="#14181f">Create your account</text>
+        <text x="14" y="76" font-family="Inter,sans-serif" font-size="5.6" fill="#7d8794">Fourteen days free. No card needed.</text>
+        <text x="14" y="93" font-family="Inter,sans-serif" font-size="5" font-weight="600" fill="#7d8794">EMAIL</text>
+        <rect x="14" y="96" width="104" height="16" rx="4" fill="#fff" stroke="#0b7a63" stroke-width="1"/>
+        <text x="19" y="106.5" font-family="Inter,sans-serif" font-size="6" fill="#14181f">amara@trade.co</text>
+        <text x="14" y="124" font-family="Inter,sans-serif" font-size="5" font-weight="600" fill="#7d8794">PASSWORD</text>
+        <rect x="14" y="127" width="104" height="16" rx="4" fill="#fff" stroke="#dfe3e9" stroke-width="1"/>
+        <circle cx="21" cy="135" r="1.5" fill="#4a5361"/><circle cx="26" cy="135" r="1.5" fill="#4a5361"/>
+        <circle cx="31" cy="135" r="1.5" fill="#4a5361"/><circle cx="36" cy="135" r="1.5" fill="#4a5361"/>
+        <circle cx="41" cy="135" r="1.5" fill="#4a5361"/><circle cx="46" cy="135" r="1.5" fill="#4a5361"/>
+        <rect x="14" y="148" width="70" height="3" rx="1.5" fill="#0b7a63"/>
+        <rect x="86" y="148" width="32" height="3" rx="1.5" fill="#eef1f5"/>
+        <text x="14" y="158" font-family="Inter,sans-serif" font-size="5" fill="#0b7a63">Strong password</text>
+        <rect x="14" y="167" width="104" height="18" rx="5" fill="#0b7a63"/>
+        <text x="66" y="178.5" font-family="Inter,sans-serif" font-size="6.6" font-weight="650" fill="#fff" text-anchor="middle">Start free trial</text>
+        <text x="66" y="196" font-family="Inter,sans-serif" font-size="5.6" fill="#7d8794" text-anchor="middle">Already have an account?  Log in</text>
+        <line x1="14" y1="208" x2="118" y2="208" stroke="#eef1f5" stroke-width="1"/>
+        <text x="66" y="220" font-family="Inter,sans-serif" font-size="5" fill="#a8b0bb" text-anchor="middle">We verify your email before you</text>
+        <text x="66" y="228" font-family="Inter,sans-serif" font-size="5" fill="#a8b0bb" text-anchor="middle">can sign in. Sessions expire.</text>
+      </svg>
+      <figcaption><b>Sign in</b>Real accounts. Verified email, argon2 hashed passwords, revocable sessions.</figcaption>
+    </figure>
+
+    <!-- SCREEN 2: location -->
+    <figure class="screen">
+      <svg viewBox="0 0 132 250" role="img" aria-label="Location selection screen mockup">
+        <rect x="1" y="1" width="130" height="248" rx="12" fill="#fff" stroke="#c9cfd8" stroke-width="1"/>
+        <rect x="1" y="1" width="130" height="18" rx="12" fill="#f4f6f9"/>
+        <rect x="52" y="8" width="28" height="3.5" rx="1.75" fill="#c9cfd8"/>
+        <text x="14" y="34" font-family="Inter,sans-serif" font-size="7.5" font-weight="650" fill="#14181f">Where do you want to sell?</text>
+        <text x="14" y="43" font-family="Inter,sans-serif" font-size="5.4" fill="#7d8794">Narrow it down as far as you like.</text>
+
+        <rect x="14" y="50" width="104" height="14" rx="4" fill="#e6f4f0" stroke="#0b7a63" stroke-width="1"/>
+        <text x="19" y="59.5" font-family="Inter,sans-serif" font-size="6" font-weight="600" fill="#0b7a63">All of Kenya</text>
+        <text x="108" y="59.5" font-family="Inter,sans-serif" font-size="6" fill="#0b7a63" text-anchor="middle">›</text>
+
+        <text x="14" y="76" font-family="Inter,sans-serif" font-size="5" font-weight="600" fill="#7d8794">COUNTY</text>
+        <rect x="14" y="79" width="104" height="14" rx="4" fill="#0b7a63"/>
+        <text x="19" y="88.5" font-family="Inter,sans-serif" font-size="6" font-weight="600" fill="#fff">Nairobi</text>
+        <text x="112" y="88.5" font-family="Inter,sans-serif" font-size="4.6" fill="#a9dcd0" text-anchor="end">tier 1</text>
+
+        <rect x="14" y="96" width="50" height="12" rx="4" fill="#f4f6f9" stroke="#dfe3e9"/>
+        <text x="19" y="104" font-family="Inter,sans-serif" font-size="5.4" fill="#4a5361">Mombasa</text>
+        <rect x="68" y="96" width="50" height="12" rx="4" fill="#f4f6f9" stroke="#dfe3e9"/>
+        <text x="73" y="104" font-family="Inter,sans-serif" font-size="5.4" fill="#4a5361">Kiambu</text>
+        <rect x="14" y="111" width="50" height="12" rx="4" fill="#f4f6f9" stroke="#dfe3e9"/>
+        <text x="19" y="119" font-family="Inter,sans-serif" font-size="5.4" fill="#4a5361">Kisumu</text>
+        <rect x="68" y="111" width="50" height="12" rx="4" fill="#f4f6f9" stroke="#dfe3e9"/>
+        <text x="73" y="119" font-family="Inter,sans-serif" font-size="5.4" fill="#4a5361">Nakuru</text>
+        <text x="14" y="131" font-family="Inter,sans-serif" font-size="5" fill="#0b7a63">+ 10 more counties</text>
+
+        <text x="14" y="146" font-family="Inter,sans-serif" font-size="5" font-weight="600" fill="#7d8794">TOWN OR WARD IN NAIROBI</text>
+        <rect x="14" y="149" width="32" height="12" rx="6" fill="#0b7a63"/>
+        <text x="30" y="157" font-family="Inter,sans-serif" font-size="5.2" font-weight="600" fill="#fff" text-anchor="middle">CBD</text>
+        <rect x="49" y="149" width="38" height="12" rx="6" fill="#0b7a63"/>
+        <text x="68" y="157" font-family="Inter,sans-serif" font-size="5.2" font-weight="600" fill="#fff" text-anchor="middle">Gikomba</text>
+        <rect x="90" y="149" width="28" height="12" rx="6" fill="#f4f6f9" stroke="#dfe3e9"/>
+        <text x="104" y="157" font-family="Inter,sans-serif" font-size="5.2" fill="#4a5361" text-anchor="middle">Karen</text>
+        <rect x="14" y="164" width="40" height="12" rx="6" fill="#f4f6f9" stroke="#dfe3e9"/>
+        <text x="34" y="172" font-family="Inter,sans-serif" font-size="5.2" fill="#4a5361" text-anchor="middle">Westlands</text>
+        <rect x="57" y="164" width="38" height="12" rx="6" fill="#f4f6f9" stroke="#dfe3e9"/>
+        <text x="76" y="172" font-family="Inter,sans-serif" font-size="5.2" fill="#4a5361" text-anchor="middle">Eastleigh</text>
+
+        <rect x="14" y="185" width="104" height="22" rx="4" fill="#e6f4f0"/>
+        <text x="19" y="194" font-family="Inter,sans-serif" font-size="5.2" font-weight="650" fill="#0b7a63">Fulfilment centre in this county</text>
+        <text x="19" y="202" font-family="Inter,sans-serif" font-size="4.8" fill="#0b7a63">Ecart Services, Mombasa Road</text>
+
+        <rect x="14" y="213" width="104" height="17" rx="5" fill="#0b7a63"/>
+        <text x="66" y="224" font-family="Inter,sans-serif" font-size="6.4" font-weight="650" fill="#fff" text-anchor="middle">Use this area</text>
+      </svg>
+      <figcaption><b>Choose the ground</b>National, then county, then town or ward. Coverage and logistics shown as you pick.</figcaption>
+    </figure>
+
+    <!-- SCREEN 3: ask -->
+    <figure class="screen">
+      <svg viewBox="0 0 132 250" role="img" aria-label="Ask a question screen mockup">
+        <rect x="1" y="1" width="130" height="248" rx="12" fill="#fff" stroke="#c9cfd8" stroke-width="1"/>
+        <rect x="1" y="1" width="130" height="18" rx="12" fill="#f4f6f9"/>
+        <rect x="52" y="8" width="28" height="3.5" rx="1.75" fill="#c9cfd8"/>
+        <rect x="1" y="19" width="130" height="14" fill="#fff"/>
+        <text x="8" y="29" font-family="Inter,sans-serif" font-size="5.6" font-weight="600" fill="#4a5361">Nairobi · CBD, Gikomba</text>
+        <text x="124" y="29" font-family="Inter,sans-serif" font-size="5.6" fill="#0b7a63" text-anchor="end">change</text>
+        <line x1="1" y1="33" x2="131" y2="33" stroke="#eef1f5"/>
+
+        <rect x="30" y="41" width="94" height="26" rx="6" fill="#0b7a63"/>
+        <text x="36" y="51" font-family="Inter,sans-serif" font-size="5.6" fill="#fff">If I import phone cases,</text>
+        <text x="36" y="59" font-family="Inter,sans-serif" font-size="5.6" fill="#fff">what margin can I expect?</text>
+
+        <circle cx="14" cy="78" r="6" fill="#e6f4f0"/>
+        <text x="14" y="80.5" font-family="Inter,sans-serif" font-size="5.6" font-weight="700" fill="#0b7a63" text-anchor="middle">S</text>
+        <rect x="23" y="72" width="101" height="70" rx="6" fill="#f4f6f9"/>
+        <text x="29" y="82" font-family="Inter,sans-serif" font-size="5.6" fill="#14181f">Median selling price for a</text>
+        <text x="29" y="90" font-family="Inter,sans-serif" font-size="5.6" fill="#14181f">phone case on Jumia Kenya</text>
+        <text x="29" y="98" font-family="Inter,sans-serif" font-size="5.6" fill="#14181f">is</text>
+        <text x="35" y="98" font-family="Inter,sans-serif" font-size="5.6" font-weight="700" fill="#14181f">KSh 649</text>
+        <text x="58" y="98" font-family="Inter,sans-serif" font-size="5.6" fill="#14181f">. After the</text>
+        <text x="29" y="106" font-family="Inter,sans-serif" font-size="5.6" fill="#14181f">category commission and</text>
+        <text x="29" y="114" font-family="Inter,sans-serif" font-size="5.6" fill="#14181f">Nairobi last mile, a landed</text>
+        <text x="29" y="122" font-family="Inter,sans-serif" font-size="5.6" fill="#14181f">cost under</text>
+        <text x="60" y="122" font-family="Inter,sans-serif" font-size="5.6" font-weight="700" fill="#14181f">KSh 310</text>
+        <text x="83" y="122" font-family="Inter,sans-serif" font-size="5.6" fill="#14181f">keeps</text>
+        <text x="29" y="130" font-family="Inter,sans-serif" font-size="5.6" fill="#14181f">you above a 30 percent</text>
+        <text x="29" y="138" font-family="Inter,sans-serif" font-size="5.6" fill="#14181f">gross margin.</text>
+
+        <rect x="23" y="146" width="101" height="15" rx="4" fill="#fff" stroke="#dfe3e9"/>
+        <circle cx="30" cy="153.5" r="2.6" fill="#0b7a63"/>
+        <text x="36" y="151.5" font-family="Inter,sans-serif" font-size="4.8" font-weight="650" fill="#4a5361">1,284 listings · Jumia</text>
+        <text x="36" y="158.5" font-family="Inter,sans-serif" font-size="4.8" fill="#7d8794">collected 8 Sep 2026 · see evidence</text>
+
+        <rect x="23" y="165" width="46" height="12" rx="6" fill="#e6f4f0"/>
+        <text x="46" y="173" font-family="Inter,sans-serif" font-size="5" font-weight="600" fill="#0b7a63" text-anchor="middle">Compare platforms</text>
+        <rect x="72" y="165" width="34" height="12" rx="6" fill="#e6f4f0"/>
+        <text x="89" y="173" font-family="Inter,sans-serif" font-size="5" font-weight="600" fill="#0b7a63" text-anchor="middle">Saturation</text>
+
+        <rect x="8" y="196" width="90" height="18" rx="9" fill="#fff" stroke="#dfe3e9"/>
+        <text x="16" y="207" font-family="Inter,sans-serif" font-size="5.6" fill="#a8b0bb">Ask about a product…</text>
+        <circle cx="112" cy="205" r="9" fill="#0b7a63"/>
+        <path d="M108 205 L116 205 M112.5 201 L116.5 205 L112.5 209" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+
+        <line x1="1" y1="224" x2="131" y2="224" stroke="#eef1f5"/>
+        <text x="24" y="236" font-family="Inter,sans-serif" font-size="5" font-weight="650" fill="#0b7a63" text-anchor="middle">Ask</text>
+        <text x="55" y="236" font-family="Inter,sans-serif" font-size="5" fill="#a8b0bb" text-anchor="middle">Watch</text>
+        <text x="85" y="236" font-family="Inter,sans-serif" font-size="5" fill="#a8b0bb" text-anchor="middle">Reports</text>
+        <text x="113" y="236" font-family="Inter,sans-serif" font-size="5" fill="#a8b0bb" text-anchor="middle">You</text>
+      </svg>
+      <figcaption><b>Ask</b>Plain language in, a number out, with the observation count and collection date attached.</figcaption>
+    </figure>
+
+    <!-- SCREEN 4: compare -->
+    <figure class="screen">
+      <svg viewBox="0 0 132 250" role="img" aria-label="Platform comparison screen mockup">
+        <rect x="1" y="1" width="130" height="248" rx="12" fill="#fff" stroke="#c9cfd8" stroke-width="1"/>
+        <rect x="1" y="1" width="130" height="18" rx="12" fill="#f4f6f9"/>
+        <rect x="52" y="8" width="28" height="3.5" rx="1.75" fill="#c9cfd8"/>
+        <text x="14" y="33" font-family="Inter,sans-serif" font-size="7.5" font-weight="650" fill="#14181f">Phone cases</text>
+        <text x="14" y="42" font-family="Inter,sans-serif" font-size="5.4" fill="#7d8794">Nairobi · last 90 days</text>
+
+        <text x="14" y="57" font-family="Inter,sans-serif" font-size="5" font-weight="600" fill="#7d8794">MEDIAN PRICE TREND</text>
+        <rect x="14" y="60" width="104" height="34" rx="4" fill="#f9fafc"/>
+        <polyline points="20,86 32,83 44,84 56,79 68,77 80,78 92,73 104,70 112,68"
+                  fill="none" stroke="#0b7a63" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="112" cy="68" r="2.2" fill="#0b7a63"/>
+        <text x="20" y="92" font-family="Inter,sans-serif" font-size="4.4" fill="#a8b0bb">Jun</text>
+        <text x="104" y="92" font-family="Inter,sans-serif" font-size="4.4" fill="#a8b0bb">Sep</text>
+        <text x="112" y="66" font-family="Inter,sans-serif" font-size="4.6" font-weight="650" fill="#0b7a63" text-anchor="end">649</text>
+
+        <text x="14" y="107" font-family="Inter,sans-serif" font-size="5" font-weight="600" fill="#7d8794">BY PLATFORM</text>
+
+        <rect x="14" y="110" width="104" height="21" rx="4" fill="#fff" stroke="#dfe3e9"/>
+        <text x="19" y="119" font-family="Inter,sans-serif" font-size="5.8" font-weight="650" fill="#14181f">Jumia</text>
+        <text x="113" y="119" font-family="Inter,sans-serif" font-size="5.8" font-weight="650" fill="#14181f" text-anchor="end">KSh 649</text>
+        <text x="19" y="127" font-family="Inter,sans-serif" font-size="4.6" fill="#7d8794">1,284 listings · 212 sellers</text>
+        <rect x="88" y="123" width="25" height="6" rx="3" fill="#fbecec"/>
+        <text x="100" y="127.5" font-family="Inter,sans-serif" font-size="4.2" font-weight="650" fill="#a32020" text-anchor="middle">crowded</text>
+
+        <rect x="14" y="134" width="104" height="21" rx="4" fill="#fff" stroke="#dfe3e9"/>
+        <text x="19" y="143" font-family="Inter,sans-serif" font-size="5.8" font-weight="650" fill="#14181f">Kilimall</text>
+        <text x="113" y="143" font-family="Inter,sans-serif" font-size="5.8" font-weight="650" fill="#14181f" text-anchor="end">KSh 585</text>
+        <text x="19" y="151" font-family="Inter,sans-serif" font-size="4.6" fill="#7d8794">340 listings · category level</text>
+        <rect x="86" y="147" width="27" height="6" rx="3" fill="#e6f4f0"/>
+        <text x="99.5" y="151.5" font-family="Inter,sans-serif" font-size="4.2" font-weight="650" fill="#0b7a63" text-anchor="middle">room</text>
+
+        <rect x="14" y="158" width="104" height="21" rx="4" fill="#fff" stroke="#dfe3e9"/>
+        <text x="19" y="167" font-family="Inter,sans-serif" font-size="5.8" font-weight="650" fill="#14181f">Glovo</text>
+        <text x="113" y="167" font-family="Inter,sans-serif" font-size="5.8" font-weight="650" fill="#14181f" text-anchor="end">not carried</text>
+        <text x="19" y="175" font-family="Inter,sans-serif" font-size="4.6" fill="#7d8794">Accessories not a Glovo category</text>
+
+        <rect x="14" y="182" width="104" height="21" rx="4" fill="#f9fafc" stroke="#eef1f5"/>
+        <text x="19" y="191" font-family="Inter,sans-serif" font-size="5.8" font-weight="650" fill="#7d8794">Uber Eats</text>
+        <rect x="83" y="186" width="30" height="6" rx="3" fill="#fdf1e6"/>
+        <text x="98" y="190.5" font-family="Inter,sans-serif" font-size="4.2" font-weight="650" fill="#b0530f" text-anchor="middle">manual data</text>
+        <text x="19" y="199" font-family="Inter,sans-serif" font-size="4.6" fill="#a8b0bb">Food only. Not relevant here.</text>
+
+        <rect x="14" y="209" width="104" height="17" rx="5" fill="#0b7a63"/>
+        <text x="66" y="220" font-family="Inter,sans-serif" font-size="6.2" font-weight="650" fill="#fff" text-anchor="middle">Watch this category</text>
+        <text x="66" y="236" font-family="Inter,sans-serif" font-size="4.8" fill="#a8b0bb" text-anchor="middle">Alerts on price drops and new sellers</text>
+      </svg>
+      <figcaption><b>Compare and watch</b>Platforms side by side, with honest gaps. Then track it over time.</figcaption>
+    </figure>
+
+  </div>
+
+  <div class="callout">
+    <p><strong>Note the fourth card on the comparison screen.</strong> Uber Eats is labelled as manual data and Kilimall is labelled as category level rather than product level. We show our own coverage limits inside the product. A vendor about to spend money can tell the difference between a number from twelve hundred observations and a number from forty, and hiding that distinction is how a tool like this loses trust permanently.</p>
+  </div>
+
+  <h3>Location is a first class input</h3>
+  <p>Every question is answered against a place, because Kenyan commerce is not uniform. A vendor can ask about all of Kenya, narrow to one of fourteen counties with confirmed platform logistics, or narrow again to a town or ward: Gikomba and the CBD plazas for the fashion and thrift trade, Nyali or Kongowea for the coast, Kitengela and Ongata Rongai for the Nairobi commuter belt. The county list is not free text. It is drawn from a maintained coverage file, so a vendor cannot be shown an encouraging answer about a county where the platform cannot actually collect or deliver.</p>
+</section>
+
+
+<!-- ============ 4. HOW IT WORKS ============ -->
+<section>
+  <div class="secnum">04</div>
+  <h2>How it works</h2>
+  <p class="lede">Collect nightly, aggregate into a catalogue, answer questions from the catalogue. No user question ever triggers a live scrape.</p>
+
+  <figure class="diagram">
+    <svg viewBox="0 0 620 232" role="img" aria-label="System architecture diagram">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#7d8794"/>
+        </marker>
+      </defs>
+
+      <!-- sources -->
+      <text x="10" y="14" font-family="Inter,sans-serif" font-size="9" font-weight="650" fill="#7d8794">SOURCES</text>
+      <rect x="10" y="22" width="108" height="26" rx="4" fill="#e6f4f0" stroke="#0b7a63"/>
+      <text x="20" y="34" font-family="Inter,sans-serif" font-size="9" font-weight="650" fill="#0b7a63">Jumia Kenya</text>
+      <text x="20" y="44" font-family="Inter,sans-serif" font-size="7.4" fill="#0b7a63">sitemap · product pages</text>
+
+      <rect x="10" y="53" width="108" height="26" rx="4" fill="#fdf1e6" stroke="#b0530f"/>
+      <text x="20" y="65" font-family="Inter,sans-serif" font-size="9" font-weight="650" fill="#b0530f">Kilimall Kenya</text>
+      <text x="20" y="75" font-family="Inter,sans-serif" font-size="7.4" fill="#b0530f">category pages only</text>
+
+      <rect x="10" y="84" width="108" height="26" rx="4" fill="#fdf1e6" stroke="#b0530f"/>
+      <text x="20" y="96" font-family="Inter,sans-serif" font-size="9" font-weight="650" fill="#b0530f">Glovo Kenya</text>
+      <text x="20" y="106" font-family="Inter,sans-serif" font-size="7.4" fill="#b0530f">rendered data payloads</text>
+
+      <rect x="10" y="115" width="108" height="26" rx="4" fill="#fbecec" stroke="#a32020"/>
+      <text x="20" y="127" font-family="Inter,sans-serif" font-size="9" font-weight="650" fill="#a32020">Uber Eats</text>
+      <text x="20" y="137" font-family="Inter,sans-serif" font-size="7.4" fill="#a32020">manual, dated file</text>
+
+      <rect x="10" y="146" width="108" height="26" rx="4" fill="#f4f6f9" stroke="#dfe3e9"/>
+      <text x="20" y="158" font-family="Inter,sans-serif" font-size="9" font-weight="650" fill="#4a5361">Policy corpus</text>
+      <text x="20" y="168" font-family="Inter,sans-serif" font-size="7.4" fill="#7d8794">commission · logistics</text>
+
+      <!-- collector -->
+      <line x1="120" y1="97" x2="150" y2="97" stroke="#7d8794" stroke-width="1.2" marker-end="url(#ar)"/>
+      <rect x="152" y="62" width="96" height="70" rx="4" fill="#fff" stroke="#14181f" stroke-width="1.2"/>
+      <text x="200" y="80" font-family="Inter,sans-serif" font-size="9" font-weight="650" fill="#14181f" text-anchor="middle">Nightly</text>
+      <text x="200" y="92" font-family="Inter,sans-serif" font-size="9" font-weight="650" fill="#14181f" text-anchor="middle">collector</text>
+      <text x="200" y="105" font-family="Inter,sans-serif" font-size="7.2" fill="#7d8794" text-anchor="middle">robots honoured</text>
+      <text x="200" y="115" font-family="Inter,sans-serif" font-size="7.2" fill="#7d8794" text-anchor="middle">rate limited</text>
+      <text x="200" y="125" font-family="Inter,sans-serif" font-size="7.2" fill="#7d8794" text-anchor="middle">resumable</text>
+
+      <!-- db -->
+      <line x1="250" y1="97" x2="280" y2="97" stroke="#7d8794" stroke-width="1.2" marker-end="url(#ar)"/>
+      <text x="282" y="14" font-family="Inter,sans-serif" font-size="9" font-weight="650" fill="#7d8794">CATALOGUE</text>
+      <rect x="282" y="34" width="118" height="24" rx="4" fill="#f4f6f9" stroke="#dfe3e9"/>
+      <text x="291" y="49" font-family="Inter,sans-serif" font-size="8.4" fill="#4a5361">raw_listing · append only</text>
+
+      <rect x="282" y="62" width="118" height="34" rx="4" fill="#e6f4f0" stroke="#0b7a63" stroke-width="1.2"/>
+      <text x="291" y="76" font-family="Inter,sans-serif" font-size="8.4" font-weight="650" fill="#0b7a63">price_observation</text>
+      <text x="291" y="88" font-family="Inter,sans-serif" font-size="7.2" fill="#0b7a63">the time series · the moat</text>
+
+      <rect x="282" y="100" width="118" height="34" rx="4" fill="#f4f6f9" stroke="#dfe3e9"/>
+      <text x="291" y="114" font-family="Inter,sans-serif" font-size="8.4" font-weight="650" fill="#4a5361">category_rollup</text>
+      <text x="291" y="126" font-family="Inter,sans-serif" font-size="7.2" fill="#7d8794">median · sellers · saturation</text>
+
+      <rect x="282" y="138" width="118" height="24" rx="4" fill="#f4f6f9" stroke="#dfe3e9"/>
+      <text x="291" y="153" font-family="Inter,sans-serif" font-size="8.4" fill="#4a5361">text corpus · searchable</text>
+
+      <!-- answer engine -->
+      <line x1="402" y1="97" x2="432" y2="97" stroke="#7d8794" stroke-width="1.2" marker-end="url(#ar)"/>
+      <text x="434" y="14" font-family="Inter,sans-serif" font-size="9" font-weight="650" fill="#7d8794">ANSWER ENGINE</text>
+      <rect x="434" y="52" width="120" height="90" rx="4" fill="#fff" stroke="#14181f" stroke-width="1.2"/>
+      <text x="494" y="66" font-family="Inter,sans-serif" font-size="8.6" font-weight="650" fill="#14181f" text-anchor="middle">Route · retrieve</text>
+      <text x="494" y="77" font-family="Inter,sans-serif" font-size="8.6" font-weight="650" fill="#14181f" text-anchor="middle">· assemble</text>
+      <line x1="446" y1="84" x2="542" y2="84" stroke="#eef1f5"/>
+      <text x="494" y="96" font-family="Inter,sans-serif" font-size="7.4" fill="#a32020" text-anchor="middle">no model ever</text>
+      <text x="494" y="106" font-family="Inter,sans-serif" font-size="7.4" fill="#a32020" text-anchor="middle">computes a number</text>
+      <text x="494" y="119" font-family="Inter,sans-serif" font-size="7.4" fill="#0b7a63" text-anchor="middle">self hosted · no API</text>
+      <text x="494" y="129" font-family="Inter,sans-serif" font-size="7.4" fill="#0b7a63" text-anchor="middle">zero cost per answer</text>
+
+      <!-- user -->
+      <line x1="494" y1="44" x2="494" y2="30" stroke="#7d8794" stroke-width="1.2" marker-end="url(#ar)"/>
+      <rect x="434" y="22" width="120" height="0" fill="none"/>
+      <text x="494" y="26" font-family="Inter,sans-serif" font-size="8.4" font-weight="650" fill="#4a5361" text-anchor="middle">answer + citation</text>
+
+      <line x1="494" y1="150" x2="494" y2="164" stroke="#7d8794" stroke-width="1.2" marker-end="url(#ar)"/>
+      <rect x="424" y="168" width="140" height="26" rx="4" fill="#f4f6f9" stroke="#dfe3e9"/>
+      <text x="494" y="180" font-family="Inter,sans-serif" font-size="8.4" font-weight="650" fill="#4a5361" text-anchor="middle">Every question logged</text>
+      <text x="494" y="190" font-family="Inter,sans-serif" font-size="7.4" fill="#7d8794" text-anchor="middle">Google Sheet · review · gap list</text>
+
+      <line x1="424" y1="181" x2="360" y2="181" stroke="#7d8794" stroke-width="1.2" stroke-dasharray="3 2" marker-end="url(#ar)"/>
+      <text x="200" y="181" font-family="Inter,sans-serif" font-size="7.6" fill="#7d8794" text-anchor="middle">gaps tell us what to collect next</text>
+      <line x1="200" y1="172" x2="200" y2="140" stroke="#7d8794" stroke-width="1.2" stroke-dasharray="3 2" marker-end="url(#ar)"/>
+    </svg>
+    <figcaption>The collector runs on a schedule and never in the request path. Questions are answered from the catalogue, so an answer is fast and no vendor's curiosity can get us rate limited.</figcaption>
+  </figure>
+
+  <h3>What we can actually see, honestly</h3>
+  <p>We verified each platform against its own published crawling policy and its live behaviour on 9 September 2026. The results are uneven, and any proposal that claimed otherwise would be misleading.</p>
+
+  <table>
+    <thead><tr><th style="width:15%">Platform</th><th style="width:13%">Access</th><th>What their own policy and behaviour permits</th><th style="width:24%">Our approach</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Jumia Kenya</strong></td>
+        <td><span class="tag ok">Good</span></td>
+        <td>Robots file permits product pages, specifications and ratings. Two public sitemaps. Facets, keyword search and seller pages disallowed.</td>
+        <td>Primary source. Sitemap driven. Product level prices and seller counts.</td>
+      </tr>
+      <tr>
+        <td><strong>Kilimall Kenya</strong></td>
+        <td><span class="tag mid">Partial</span></td>
+        <td>Robots file explicitly disallows product and item pages and the internal API. Sitemap and category pages are permitted.</td>
+        <td>Category level only. Coarser price data, and labelled as such in the product.</td>
+      </tr>
+      <tr>
+        <td><strong>Glovo Kenya</strong></td>
+        <td><span class="tag mid">Permitted, hard</span></td>
+        <td>Robots file allows crawling broadly. But listings are rendered in the browser and gated behind entering a delivery address.</td>
+        <td>Structured data payloads behind the rendered page. Higher engineering effort, worth it because Kenya is Glovo's strongest African market.</td>
+      </tr>
+      <tr>
+        <td><strong>Uber Eats</strong></td>
+        <td><span class="tag no">Blocked</span></td>
+        <td>Refuses non browser requests outright. Actively bot protected.</td>
+        <td>We do not scrape it. A small, dated, manually maintained fact table, labelled manual everywhere it appears.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <p><strong>Why we are telling you this rather than burying it.</strong> Two reasons, both commercial. First, a data product whose collection method is legally fragile is not investable, because the asset can vanish in a single letter. Ours cannot: we read only what these companies publish for crawling, at rates below their thresholds, identifying ourselves honestly. Second, the coverage gaps are a roadmap, not an embarrassment. They tell you exactly what a data partnership or a modest data budget would buy.</p>
+  </div>
+
+  <h3>The collection discipline we inherited</h3>
+  <p>The prototype this is built from taught three lessons the hard way, and each is now a rule in the codebase:</p>
+  <ul>
+    <li><strong>An empty result must raise an error, not pass silently.</strong> Anti bot systems signal throttling by returning nothing successfully rather than by returning an error. A collector without this check looks perfectly healthy while collecting zero rows. This is the failure most likely to cost a week.</li>
+    <li><strong>Reruns must resume, not restart.</strong> A long crawl will be interrupted. Raw records are unique on platform, product and date, and the crawler checkpoints after each unit, so a rerun continues where it stopped.</li>
+    <li><strong>Run it against the real site before building on top of it.</strong> On the predecessor's first live run, the results included sellers in Cape Town and Indonesia, and a national newspaper scored as a top retailer. Every one of those defects was invisible in design and obvious within one real run.</li>
+  </ul>
+</section>
+
+
+<!-- ============ 5. THE ANSWER ENGINE ============ -->
+<section>
+  <div class="secnum">05</div>
+  <h2>The answer engine, and why it can be trusted</h2>
+  <p class="lede">This is the part of the product that could most easily be built badly, and the part a technical investor should interrogate hardest. So here is exactly how it works.</p>
+
+  <h3>The questions split in two, and so does the architecture</h3>
+  <p>Look at what vendors actually ask:</p>
+
+  <div class="cols2">
+    <div>
+      <h4>Arithmetic questions</h4>
+      <ul class="small">
+        <li>What is the median price of a wireless earbud on Jumia Kenya?</li>
+        <li>How many distinct sellers list one?</li>
+        <li>Which category is least saturated right now?</li>
+        <li>What has this category's price done since June?</li>
+      </ul>
+      <p class="small">These are database aggregates. They have exactly one right answer, and it is computable.</p>
+    </div>
+    <div>
+      <h4>Qualitative questions</h4>
+      <ul class="small">
+        <li>What commission does this category attract?</li>
+        <li>What are the seller onboarding requirements?</li>
+        <li>Can this platform deliver to Kisumu?</li>
+        <li>How does pay on delivery affect my cash cycle?</li>
+      </ul>
+      <p class="small">These are answered from documents: published commission schedules, seller terms, logistics coverage.</p>
+    </div>
+  </div>
+
+  <p>The naive build treats both as a retrieval problem, embeds everything, and asks a language model to read the retrieved chunks and produce a number. That fails on the left hand column, and it fails in the worst possible way: fluently. The model returns a confident average that is not the average of anything.</p>
+
+  <div class="callout">
+    <p><strong>So we split it, and no model ever computes a number.</strong> A question is classified, then routed. Arithmetic questions run a typed, parameterised SQL query over the catalogue: category, platform, county, window. Postgres computes the median, the seller count, the trend. The figures come back and are placed into an answer by template, so the number in the sentence is the number the database returned, every time, with no opportunity for anything to invent one. Qualitative questions retrieve the relevant passages from the document corpus and answer from those passages, with the passage cited.</p>
+  </div>
+
+  <h3>Retrieval, and the generation step, entirely on our own infrastructure</h3>
+  <p>There is no external language model API anywhere in this product. That is a deliberate architectural decision with three separate payoffs.</p>
+
+  <table>
+    <thead><tr><th style="width:22%">Layer</th><th>What it is</th><th style="width:26%">Why this way</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Question routing</strong></td>
+        <td>Rule and pattern based classification into an intent: price level, seller count, saturation, trend, margin, policy, coverage. The same deterministic technique already proven in the predecessor's product classifier.</td>
+        <td>An intent that is wrong is fixed by editing one line, and the same question always routes the same way.</td>
+      </tr>
+      <tr>
+        <td><strong>Numeric retrieval</strong></td>
+        <td>A fixed library of parameterised SQL queries over the catalogue and its nightly rollups. Parameters validated against enumerations, never free text.</td>
+        <td>Nothing can write ad hoc SQL, so nothing can write damaging or wrong SQL.</td>
+      </tr>
+      <tr>
+        <td><strong>Document retrieval</strong></td>
+        <td>Postgres full text search over the corpus of commission schedules, seller terms, category definitions and logistics coverage, with local sentence embeddings for semantic recall where keyword search is too literal.</td>
+        <td>The embedding model runs on our own CPU, is about ninety megabytes, and costs nothing per query.</td>
+      </tr>
+      <tr>
+        <td><strong>Answer assembly</strong></td>
+        <td>Templates for every numeric intent. A self hosted open weights instruct model, running on our own machine, only for phrasing open ended questions and for stitching a multi part answer together from retrieved facts.</td>
+        <td>Fixed machine cost, no metered bill, and the model is never the source of a figure.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>The three payoffs, in order of commercial weight:</p>
+  <ul>
+    <li><strong>Marginal cost per answered question is effectively zero.</strong> This is what makes a 200 shilling subscription genuinely profitable rather than marginally so, and it is why our gross margin does not degrade as usage grows. Inference is a fixed line in the cost table, not a variable one.</li>
+    <li><strong>No dependency on a metered third party.</strong> A product whose core function is billed per call by an external provider has somebody else's hand on its cost base and its availability. Ours does not.</li>
+    <li><strong>The questions never leave our infrastructure.</strong> What a vendor asks reveals exactly what they are about to invest in. That is among the most commercially sensitive things a business has, and we can tell a customer truthfully that it is never transmitted to a third party model provider. For the agency and brand tiers this is a selling point rather than a footnote.</li>
+  </ul>
+
+  <h3>Every number carries its evidence</h3>
+  <p>No answer is allowed to state a figure without stating what it rests on. Each numeric claim is returned with the number of observations behind it, which platforms they came from, and when they were collected. Below a minimum observation threshold the product declines to answer and says the data is too thin, rather than producing a number from eleven listings and letting a vendor treat it as a market rate.</p>
+  <p>Because the numbers come from templates over query results rather than from generated text, this is not a behaviour we are hoping for. The citation is assembled from the same query that produced the figure, so a figure without its evidence is not a thing the system can emit.</p>
+
+  <div class="callout warn">
+    <p><strong>What we give up, stated plainly.</strong> A frontier hosted model would handle a rambling, badly phrased, multi part question more gracefully than our routing will, and would write more elegant prose. We accept that. In exchange we get answers that are reproducible, auditable, free at the margin, and private. For a product whose entire value is that a vendor can trust the number, that is the correct trade. Where the routing genuinely cannot place a question, the product says so and offers the nearest thing it can answer, which is a better failure than a fluent guess.</p>
+  </div>
+</section>
+
+
+<!-- ============ 6. PRICING ============ -->
+<section>
+  <div class="secnum">06</div>
+  <h2>Pricing and packaging</h2>
+  <p class="lede">Fourteen days free, then from 200 shillings a month. Value climbs on three deliberate axes: how many platforms you can see, how far back you can look, and how much the product does on your behalf.</p>
+
+  <table>
+    <thead>
+      <tr><th style="width:13%">Tier</th><th style="width:15%" class="num">Price per month</th><th style="width:22%">Who it is for</th><th>What unlocks</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Trial</strong></td>
+        <td class="num"><strong>Free, 14 days</strong></td>
+        <td>Anyone signing up</td>
+        <td>Full Starter capability with a capped question count. No card required to begin, because a vendor evaluating a market should not have to buy the map first.</td>
+      </tr>
+      <tr>
+        <td><strong>Starter</strong></td>
+        <td class="num"><strong>KSh 200</strong><br><span class="small">about USD 1.55</span></td>
+        <td>A vendor testing one product idea</td>
+        <td>Questions answered across Jumia and Kilimall. One category on watch. Thirty days of price history. Monthly question quota.</td>
+      </tr>
+      <tr>
+        <td><strong>Growth</strong></td>
+        <td class="num"><strong>KSh 1,200</strong><br><span class="small">about USD 9.30</span></td>
+        <td>A vendor actively planning entry</td>
+        <td>All four platforms. Five categories on watch. Twelve months of history. CSV export. Weekly digest of what moved.</td>
+      </tr>
+      <tr>
+        <td><strong>Pro</strong></td>
+        <td class="num"><strong>KSh 4,500</strong><br><span class="small">about USD 35</span></td>
+        <td>An established seller or distributor</td>
+        <td>Fair use unlimited questions. Full history. Alerts on price drops and new entrants. Margin calculator with live commission and logistics inputs. Saved reports.</td>
+      </tr>
+      <tr>
+        <td><strong>Premium</strong></td>
+        <td class="num"><strong>KSh 15,000</strong><br><span class="small">about USD 116</span></td>
+        <td>An agency, brand or investor</td>
+        <td>Everything, plus API access, multiple seats with roles, custom category tracking on request, priority data refresh, and a quarterly analyst review.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Why 200 shillings is the right entry price</h3>
+  <p>It is below the threshold at which a vendor stops to think. It is collectable by mobile money without friction. It is small enough that a curious seller in Nakuru will try it, and that matters, because the Kenyan seller base is both a customer segment and the source of the qualitative signal that makes the product better. And it anchors the ladder: once someone is paying 200 shillings and getting real answers, 1,200 for all four platforms and twelve months of history is an easy step.</p>
+
+  <h3>How payment works</h3>
+  <p>One integration, Paystack, covers both halves of the market: M Pesa for Kenyan and mobile money payers, and international Visa and Mastercard for the vendor in Guangzhou or Istanbul. Prices are set in shillings, recurring plans and renewal webhooks are handled by the provider, and subscription state is authoritative in our own database and reconciled against theirs on a schedule. We never trust a client claim about what somebody has paid for.</p>
+
+  <div class="callout">
+    <p><strong>Why the tiers gate breadth and depth rather than volume.</strong> Because answering a question costs us nothing at the margin, we do not need to ration questions to protect a margin, and pricing by question count would punish exactly the engaged users we want. So the ladder gates what a subscriber can see instead: how many platforms, how far back, and how much the product does unprompted. Quotas exist for fairness and capacity, not to control a bill. Section 7 sets out the arithmetic.</p>
+  </div>
+</section>
+
+
+<!-- ============ 7. UNIT ECONOMICS ============ -->
+<section>
+  <div class="secnum">07</div>
+  <h2>Unit economics</h2>
+  <p class="lede">The arithmetic, shown rather than asserted. Converted at 129 shillings to the dollar.</p>
+
+  <h3>The shape of this business: no variable cost per question</h3>
+  <p>Because there is no metered model provider, an answered question consumes no purchased input. Numeric questions run a SQL query, which is measured in milliseconds of a database we are already paying for. Open ended questions use a self hosted model on a machine we are already renting. The only genuine variable cost in the entire business is the payment processor's percentage.</p>
+
+  <p>This is the central financial fact about the product and it is unusual enough to be worth stating directly: <strong>gross margin is roughly 97 percent at every tier and does not degrade with usage.</strong> A subscriber who asks four hundred questions costs us the same as one who asks four.</p>
+
+  <table class="eco tight">
+    <thead><tr><th>Tier</th><th class="num">Price</th><th class="num">Payment fee at 2.9%</th><th class="num">Variable cost of answers</th><th class="num">Contribution</th><th class="num">Gross margin</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Starter</strong></td><td class="num">200</td><td class="num">5.80</td><td class="num">0</td><td class="num"><strong>194.20</strong></td><td class="num"><strong>97%</strong></td></tr>
+      <tr><td><strong>Growth</strong></td><td class="num">1,200</td><td class="num">34.80</td><td class="num">0</td><td class="num"><strong>1,165.20</strong></td><td class="num"><strong>97%</strong></td></tr>
+      <tr><td><strong>Pro</strong></td><td class="num">4,500</td><td class="num">130.50</td><td class="num">0</td><td class="num"><strong>4,369.50</strong></td><td class="num"><strong>97%</strong></td></tr>
+      <tr><td><strong>Premium</strong></td><td class="num">15,000</td><td class="num">435.00</td><td class="num">0</td><td class="num"><strong>14,565.00</strong></td><td class="num"><strong>97%</strong></td></tr>
+    </tbody>
+  </table>
+  <p class="small">Kenyan shillings per subscriber per month. Quotas still exist, but as a capacity and fairness control rather than as a cost control, and as a reason to upgrade.</p>
+
+  <h3>Fixed cost, and the break even point</h3>
+
+  <div class="cols2 wide-left">
+    <div>
+      <table class="eco tight">
+        <thead><tr><th>Monthly fixed cost</th><th class="num">USD</th><th class="num">KSh</th></tr></thead>
+        <tbody>
+          <tr><td>Application hosting</td><td class="num">7.00</td><td class="num">903</td></tr>
+          <tr><td>Postgres with volume</td><td class="num">10.00</td><td class="num">1,290</td></tr>
+          <tr><td>Nightly collector machine</td><td class="num">3.00</td><td class="num">387</td></tr>
+          <tr><td><strong>Inference machine</strong>, always on</td><td class="num">32.00</td><td class="num">4,128</td></tr>
+          <tr><td>Transactional email</td><td class="num">0</td><td class="num">0</td></tr>
+          <tr><td>Domain</td><td class="num">1.50</td><td class="num">194</td></tr>
+          <tr><td><strong>Total</strong></td><td class="num"><strong>53.50</strong></td><td class="num"><strong>6,902</strong></td></tr>
+        </tbody>
+      </table>
+      <p class="small">The inference machine is the cost we chose to take on in exchange for a zero marginal cost per answer. It is the single largest line and it is the one that buys the margin structure above.</p>
+    </div>
+    <div>
+      <h4>Break even</h4>
+      <p class="small">On the entry tier alone, fixed cost is covered by <strong>36 Starter subscribers</strong> at 194.20 shillings contribution each.</p>
+      <p class="small">On a realistic tier mix of 60 percent Starter, 25 percent Growth, 10 percent Pro and 5 percent Premium, blended revenue is <strong>1,620 shillings</strong> per subscriber and blended contribution is <strong>1,573 shillings</strong>. Fixed cost is covered by <strong>five paying subscribers</strong>.</p>
+      <p class="small">The business is not capital intensive. It is a distribution problem, not a cost problem, and that is what the raise is for.</p>
+    </div>
+  </div>
+
+  <h3>Capacity, which replaces cost as the thing to watch</h3>
+  <p>The constraint is no longer a bill, it is throughput. Numeric answers are instant and effectively unlimited, because they are database queries. Only the open ended minority, which we estimate at roughly thirty percent of questions, occupies the inference machine, at something like a minute of machine time for a full answer. One machine therefore serves on the order of fifteen hundred generated answers a day, which comfortably covers five hundred subscribers at typical usage. Capacity is added by starting another machine, in a straight line, for thirty two dollars at a time.</p>
+
+  <table class="eco tight">
+    <thead><tr><th>Paying subscribers</th><th class="num">Monthly revenue</th><th class="num">Contribution</th><th class="num">Fixed cost</th><th class="num">Monthly operating profit</th><th class="num">Annualised</th></tr></thead>
+    <tbody>
+      <tr><td>50</td><td class="num">81,000</td><td class="num">78,651</td><td class="num">6,902</td><td class="num"><strong>71,749</strong></td><td class="num">860,988</td></tr>
+      <tr><td>250</td><td class="num">405,000</td><td class="num">393,255</td><td class="num">6,902</td><td class="num"><strong>386,353</strong></td><td class="num">4,636,236</td></tr>
+      <tr><td>1,000</td><td class="num">1,620,000</td><td class="num">1,573,020</td><td class="num">19,286</td><td class="num"><strong>1,553,734</strong></td><td class="num">18,644,808</td></tr>
+      <tr><td>5,000</td><td class="num">8,100,000</td><td class="num">7,865,100</td><td class="num">74,000</td><td class="num"><strong>7,791,100</strong></td><td class="num">93,493,200</td></tr>
+    </tbody>
+  </table>
+  <p class="small">Kenyan shillings. Blended contribution of 1,573 shillings per subscriber. Fixed cost grows with scale but sublinearly: the 1,000 row carries three inference machines and a larger database, the 5,000 row carries ten machines, a replicated database and a paid email tier. At 1,000 subscribers this is roughly USD 144,000 of annualised operating profit from infrastructure costing about USD 150 a month.</p>
+
+  <div class="callout">
+    <p><strong>The sensitivity that matters, and it is not cost.</strong> Because variable cost is nil, operating profit moves almost entirely with two things: the number of subscribers, and the tier mix. Shifting the mix by ten points from Starter into Growth raises blended contribution from 1,573 to about 1,670 shillings, which is worth more than any conceivable saving on the cost side. That is why the tier ladder in section 6 is built around breadth of platforms and depth of history: those are the features that move somebody from 200 shillings to 1,200, and that is the only lever in this model that materially changes the outcome.</p>
+  </div>
+
+  <div class="callout warn">
+    <p><strong>The risk this structure carries.</strong> Trading a per call bill for a fixed machine means we own the capacity planning. If usage spikes faster than machines are added, answers get slow rather than expensive, and slow is the failure mode a subscriber notices. The mitigation is unglamorous and it is in the plan: queue depth and answer latency are monitored from day one, quotas exist as a fairness valve, and numeric answers, which are the majority, never touch the constrained resource at all.</p>
+  </div>
+</section>
+
+
+<!-- ============ 8. MOAT ============ -->
+<section>
+  <div class="secnum">08</div>
+  <h2>What makes this defensible</h2>
+  <p class="lede">The scraper is not the moat. Anybody can write a scraper. Three other things are much harder to copy.</p>
+
+  <div class="metrics">
+    <div class="metric"><b>Time</b><span>Price history cannot be acquired retroactively</span></div>
+    <div class="metric"><b>Language</b><span>A classifier tuned to Kenyan retail vocabulary</span></div>
+    <div class="metric"><b>Questions</b><span>A corpus of what vendors actually want to know</span></div>
+    <div class="metric"><b>Trust</b><span>Cited, refusable answers rather than confident guesses</span></div>
+  </div>
+
+  <h3>One. The time series compounds from day one</h3>
+  <p>A competitor starting in six months can crawl today's prices, and they will match our snapshot within a week. What they cannot do is obtain what a category's prices did last quarter. That record only exists because somebody was collecting it, and its value grows every night the collector runs. Trend, seasonality and the price impact of new entrants are the answers vendors most want, and they are precisely the answers that require history.</p>
+
+  <h3>Two. Kenyan retail vocabulary is not generic</h3>
+  <p>Classifying what a listing actually is, in a market where the same product is described as a power bank, a powerbank, a phone charger and a portable charger, and where a seller writes prices as 1.5k, is a solved problem in our codebase and an unsolved one in anybody else's. The predecessor project built and tested this against real Kenyan listings, deliberately as explicit rules rather than as a model, so that a wrong classification is fixed by editing one line and the same input always produces the same output. That determinism is why the numbers are reproducible, and reproducibility is what a vendor is paying for.</p>
+
+  <h3>Three. The question log is the product roadmap</h3>
+  <p>Every question asked is recorded to a reviewed Google Sheet. Reviewers mark whether the answer was right and correct it where it was not. That produces three assets in order of value:</p>
+  <ol>
+    <li><strong>A gap list.</strong> Questions vendors ask that our catalogue cannot answer. This is the highest value input to what we collect next, and no amount of engineering intuition substitutes for it.</li>
+    <li><strong>An evaluation set.</strong> Real questions with verified answers, so a change to the engine can be proven not to have made things worse.</li>
+    <li><strong>Few shot examples</strong> for question shapes that route to the wrong tool.</li>
+  </ol>
+  <p class="note">We are deliberately not claiming this trains a custom model. Fine tuning is not the near term play and any proposal that promises it is overselling. What the log genuinely buys is knowing what to build next, and being able to prove the product is improving. That is worth more at this stage than a fine tuned model would be.</p>
+
+  <h3>Four. The honesty is a feature competitors will struggle to copy</h3>
+  <p>A competitor built on a language model reading scraped pages will produce answers that look better than ours, because they will always produce an answer. Ours will sometimes say the data is too thin. The first time a vendor commits stock on a confident hallucinated number and loses money, that competitor is finished in this market. Refusing to guess is a slower path to a demo and a faster path to a business.</p>
+</section>
+
+
+<!-- ============ 9. SECURITY ============ -->
+<section>
+  <div class="secnum">09</div>
+  <h2>Security, privacy and compliance</h2>
+  <p class="lede">This product holds foreign vendors' identities, payment references, and their commercial strategy. What a vendor asks reveals what they are about to invest in, which is among the most sensitive things a business has. That shapes the architecture.</p>
+
+  <h3>The predecessor's cautionary tale</h3>
+  <div class="callout stop">
+    <p>The prototype this is built from has no authentication whatsoever. Every route on its public URL is open: any visitor can trigger a data collection run, read every scraped phone number, and download the entire database as a spreadsheet. It was written to run on a laptop, then deployed to the internet, and the assumption did not survive the move. We are naming this because it is the clearest possible statement of what this build does differently and why authentication is phase one rather than phase four.</p>
+  </div>
+
+  <h3>How access works</h3>
+  <ul>
+    <li><strong>Passwords hashed with argon2id</strong>, the current recommendation, not a general purpose hash.</li>
+    <li><strong>Server held sessions in a cookie</strong> marked HttpOnly, Secure and SameSite, rather than a self contained token. The reason is specific: a subscription that lapses or a payment that fails must revoke access immediately, and a self contained token cannot be revoked before it expires without keeping a server side list anyway.</li>
+    <li><strong>Email verified before first sign in</strong>, single use time limited reset links, and every existing session invalidated when a password changes.</li>
+    <li><strong>Rate limiting and progressive lockout</strong> on authentication endpoints, with identical responses whether or not an account exists, so the login form cannot be used to enumerate customers.</li>
+    <li><strong>Tenant isolation at the query layer.</strong> Every read is filtered by account in SQL rather than in application logic, so there is no code path that can return another vendor's data.</li>
+  </ul>
+
+  <h3>Threats specific to this kind of product</h3>
+  <table>
+    <thead><tr><th style="width:30%">Threat</th><th>Why it matters here</th><th style="width:30%">Mitigation</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Capacity abuse</strong></td>
+        <td>Answers cost us nothing per question, so this is not a financial attack. It is a denial of service one: a scripted trial account can occupy the inference machine and make every paying subscriber's answers slow.</td>
+        <td>Per account quota and per account queue fairness, checked before work is admitted. Numeric answers bypass the constrained resource entirely, so the majority of traffic is unaffected even under load.</td>
+      </tr>
+      <tr>
+        <td><strong>Prompt injection through scraped content</strong></td>
+        <td>We ingest text written by third parties. A crafted product title could try to issue instructions to the phrasing model.</td>
+        <td>Scraped text never enters a system prompt. The model receives typed numeric results and labelled snippets, never raw pages, and it never has a tool it could be induced to call.</td>
+      </tr>
+      <tr>
+        <td><strong>Injection through the query layer</strong></td>
+        <td>Anything that composes SQL from user input is a place SQL injection lives.</td>
+        <td>No component writes ad hoc SQL. The router selects from a fixed library of statements and supplies parameters validated against enumerations. Every statement is parameterised.</td>
+      </tr>
+      <tr>
+        <td><strong>Forged payment webhooks</strong></td>
+        <td>A spoofed renewal event grants a free subscription.</td>
+        <td>Signature verified before the payload is parsed, and processing is idempotent because payment providers retry.</td>
+      </tr>
+      <tr>
+        <td><strong>Strategy leakage</strong></td>
+        <td>A vendor's question history is competitively valuable and must not leak, including into our own analytics.</td>
+        <td>The question log carries a pseudonymous account reference, never the email address.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Data protection posture</h3>
+  <p>Kenya's Data Protection Act 2019 governs personal data regardless of where it was found, and a sole trader's contact details are personal data. Our position, carried forward from the predecessor and tightened:</p>
+  <ul>
+    <li>We collect product and price data, which is commercial rather than personal. We deliberately do not build a database of individual sellers' contact details for this product, because it is not needed to answer a vendor's question and it would materially raise our obligations.</li>
+    <li>Nothing behind a login is ever collected. No accounts on the platforms we observe, no automation of logged in sessions.</li>
+    <li>Each platform's published crawling policy is honoured per the table in section 4, including declining to crawl Uber Eats at all.</li>
+    <li>Our own subscribers' data is subject access and deletion capable from day one, and registration with the Office of the Data Protection Commissioner is a launch item rather than an afterthought.</li>
+  </ul>
+</section>
+
+
+<!-- ============ 10. ROADMAP AND ASK ============ -->
+<section>
+  <div class="secnum">10</div>
+  <h2>Roadmap</h2>
+  <p class="lede">Ninety days to a product a vendor pays for. Twelve months to a defensible data business.</p>
+
+  <table>
+    <thead><tr><th style="width:16%">Window</th><th style="width:30%">Milestone</th><th>What exists at the end of it</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Weeks 1 to 3</strong></td><td>Accounts and access</td><td>Working signup, email verification, login, password reset, sessions, tenant isolation. Deployed and testable on a phone. This is the foundation everything else sits on and it is built first.</td></tr>
+      <tr><td><strong>Weeks 3 to 6</strong></td><td>The catalogue</td><td>Jumia and Kilimall collectors running nightly. Products, prices and rollups accumulating. Location filtering to county and ward. The time series starts here, so it starts as early as possible.</td></tr>
+      <tr><td><strong>Weeks 6 to 9</strong></td><td>The answer engine</td><td>Question routing, the parameterised query library, document retrieval, cited answers with observation counts, refusal below threshold, and the self hosted model for open ended questions. Question logging and review sheet live.</td></tr>
+      <tr><td><strong>Weeks 9 to 11</strong></td><td>Money</td><td>Paystack plans, trial expiry, tier gating, dunning, receipts. First paying subscriber.</td></tr>
+      <tr><td><strong>Weeks 11 to 13</strong></td><td>Glovo and polish</td><td>Glovo collector, platform comparison view, category watches and alerts, installable on a phone as an app.</td></tr>
+      <tr><td><strong>Months 4 to 6</strong></td><td>Depth</td><td>Margin calculator with live commission and logistics inputs. Saved reports. Weekly digests. The gap list from real questions drives what gets collected next.</td></tr>
+      <tr><td><strong>Months 7 to 12</strong></td><td>Breadth</td><td>API for Premium. Multi seat accounts. A second market, most likely Tanzania or Uganda, reusing the entire pipeline with a new coverage file. Data partnership conversations with the platforms, from a position of having useful aggregate demand signal to trade.</td></tr>
+    </tbody>
+  </table>
+
+  <hr class="rule">
+
+  <h2>The ask</h2>
+  <p class="lede">We are raising a small pre seed round. This is a distribution problem, not a technology problem, and the raise is sized accordingly.</p>
+
+  <div class="cols2 wide-left">
+    <div>
+      <h4>Use of funds, twelve months</h4>
+      <table class="eco tight">
+        <thead><tr><th>Line</th><th class="num">Share</th><th>Buys</th></tr></thead>
+        <tbody>
+          <tr><td>Engineering</td><td class="num">45%</td><td>One additional engineer to take the collectors and the answer engine to production depth</td></tr>
+          <tr><td>Distribution</td><td class="num">30%</td><td>Reaching vendors where they already are: sourcing platforms, trade groups, diaspora seller communities</td></tr>
+          <tr><td>Data</td><td class="num">15%</td><td>A commercial data budget for what we cannot collect ourselves, which removes the Uber Eats gap and hardens Kilimall</td></tr>
+          <tr><td>Compliance and legal</td><td class="num">10%</td><td>Data protection registration, terms, and a legitimate interest assessment before any scale outreach</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h4>What we already have</h4>
+      <ul class="small">
+        <li>A working scraping and scoring pipeline in production, deployed and running.</li>
+        <li>A tested Kenyan product classifier and phone normaliser, built against real listings.</li>
+        <li>A working Google Sheets integration for the question log, credential held externally.</li>
+        <li>Verified, documented access policy for all four target platforms.</li>
+        <li>A maintained coverage file for fourteen Kenyan counties with confirmed platform logistics.</li>
+      </ul>
+      <h4>What the round proves</h4>
+      <ul class="small">
+        <li>That vendors pay 200 shillings, and then upgrade.</li>
+        <li>That the question log converts into collection priorities that raise answer coverage measurably.</li>
+        <li>That the pipeline ports to a second East African market without a rewrite.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>What we would rather be asked than told.</strong> The two genuine risks in this business are platform access changing under us, and vendor acquisition cost. We have designed for the first by reading only what is published for crawling and by keeping every source behind one swappable interface, so a blocked source is a replaced file rather than a rebuild. The second is what the raise is for, and it is the number we most want to be held to.</p>
+  </div>
+</section>
+
+
+<!-- ============ APPENDIX ============ -->
+<section>
+  <div class="secnum">A</div>
+  <h2>Appendix</h2>
+
+  <h3>A1. Access verification evidence</h3>
+  <p>Retrieved 9 September 2026. These are the platforms' own published statements about crawling, which is the basis of our collection posture.</p>
+  <table class="tight">
+    <thead><tr><th style="width:20%">Platform</th><th>Finding</th></tr></thead>
+    <tbody>
+      <tr><td>Jumia Kenya</td><td>Robots file permits product pages plus the specifications and ratings endpoints; disallows facet parameters, keyword search, seller and brand pages, and campaign pages. Blocks one commercial crawler outright and permits another explicitly. Publishes two sitemaps. No crawl delay declared.</td></tr>
+      <tr><td>Kilimall Kenya</td><td>Robots file disallows product pages, item pages, price endpoints and the internal API. Publishes a sitemap index. Category pages are not disallowed.</td></tr>
+      <tr><td>Glovo</td><td>Robots file permits crawling broadly with three narrow exclusions, and blocks one named crawler. Publishes two sitemaps. The Kenyan city pages are rendered client side and gated behind entering a delivery address.</td></tr>
+      <tr><td>Uber Eats</td><td>Returns HTTP 403 to a non browser request. Public Kenyan city pages exist but are bot protected.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>A2. Sample answers, with the evidence they would carry</h3>
+  <table class="tight">
+    <thead><tr><th style="width:38%">Question</th><th>Shape of the answer</th></tr></thead>
+    <tbody>
+      <tr><td>What does a wireless earbud sell for on Jumia Kenya?</td><td>A median and an interquartile range, the number of live listings and distinct sellers behind it, the collection date, and the direction over the last ninety days.</td></tr>
+      <tr><td>Which category is least saturated right now?</td><td>A ranked list by saturation index, defined as listings per distinct seller weighted by price dispersion, with the observation count for each so a thin category cannot masquerade as an opportunity.</td></tr>
+      <tr><td>If I import phone cases, what margin can I expect?</td><td>Median selling price from the catalogue, the published category commission, an estimated last mile cost for the selected county, and the landed cost ceiling that preserves a stated gross margin. Every input labelled with its source and date.</td></tr>
+      <tr><td>Is it worth entering beauty on Kilimall?</td><td>Explicitly caveated: Kilimall data is category level, so the answer states that its price precision is coarser than the Jumia equivalent and gives the comparison rather than a false decimal.</td></tr>
+      <tr><td>What sells best in Kisumu?</td><td>A refusal in its current form, with an explanation. We observe listings and prices, not sales volume. The product says what it cannot know instead of inferring demand from assortment and presenting it as sales.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>A3. Technical stack</h3>
+  <table class="tight">
+    <thead><tr><th style="width:26%">Layer</th><th>Choice, and the reason</th></tr></thead>
+    <tbody>
+      <tr><td>Application</td><td>Python with FastAPI. Carried over from the working predecessor, so the team is already productive in it.</td></tr>
+      <tr><td>Database</td><td>Postgres. Explicit SQL, no object mapper, because the query layer is the product's correctness boundary and it should be readable.</td></tr>
+      <tr><td>Parsing</td><td>A fast HTML parser rather than a browser, everywhere a browser is avoidable.</td></tr>
+      <tr><td>Answer engine</td><td>Retrieval and augmented generation entirely on our own infrastructure. Parameterised SQL for every figure, Postgres full text search plus local sentence embeddings for documents, and a self hosted open weights model only for phrasing. No external model API, so no per question cost and no third party sees a customer's question.</td></tr>
+      <tr><td>Front end</td><td>Hand written CSS and standard JavaScript modules, no framework and no build step. This is a deliberate operational choice: the predecessor still runs years later partly because there is nothing to rebuild.</td></tr>
+      <tr><td>Hosting</td><td>Fly.io, Johannesburg region, which is the closest low latency region to Kenyan users. Collector on a separate scheduled machine so it can never block a request.</td></tr>
+      <tr><td>Payments</td><td>Paystack, covering M Pesa and international cards through one integration.</td></tr>
+      <tr><td>Question log</td><td>Google Sheets through an existing external automation webhook, so no Google credential is ever stored on our servers.</td></tr>
+    </tbody>
+  </table>
+
+  <hr class="rule">
+  <p class="small"><strong>SokoScout</strong> · Investment proposal · 9 September 2026 · Prepared by Leonard Kinyera · Confidential<br>
+  Figures converted at KSh 129 to USD 1. Model pricing current as at September 2026. Platform access findings retrieved 9 September 2026 and subject to change at the platforms' discretion, which is why every source sits behind one swappable interface.</p>
+</section>
+
+</body>
+</html>

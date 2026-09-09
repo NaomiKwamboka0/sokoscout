@@ -1,0 +1,21 @@
+# Collection
+httpx==0.27.2
+selectolax==0.3.21
+tenacity==9.0.0
+
+# Config and CLI
+pyyaml==6.0.2
+typer==0.12.5
+python-dotenv==1.0.1
+
+# Database
+psycopg[binary]==3.2.3
+
+# Application
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+argon2-cffi==23.1.0
+itsdangerous==2.2.0
+
+# Tests
+pytest==8.3.4

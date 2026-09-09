@@ -1,0 +1,19 @@
+# Virtualenv and bytecode
+.venv/
+__pycache__/
+*.pyc
+
+# Collected data. Observations are reproducible by running the collector,
+# and a checked-in JSONL would go stale silently.
+data/
+
+# Secrets
+.env
+
+# Test and build artefacts
+.pytest_cache/
+tax_result.json
+
+# A Chrome profile left behind by the proposal PDF build. Hundreds of cache
+# files, none of them source.
+proposal/.chrome-profile/
