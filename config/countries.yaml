@@ -1,0 +1,88 @@
+# Countries, and which platforms operate in each.
+#
+# Every market has its own marketplaces, its own commission schedules, its own
+# delivery economics and its own regulator. A figure from Kenya is not a
+# weaker version of a Tanzanian figure, it is a different figure, and quoting
+# one for the other would be exactly the confident wrong answer this product
+# exists to avoid.
+#
+# So the country is a first-class dimension rather than an assumption baked
+# into the code. Adding Tanzania means adding a block here plus its own
+# taxonomy commissions and logistics; it does not mean touching the
+# comparison, the classifier or the interface.
+#
+# `active` gates whether a country can be selected at all. A country listed
+# but inactive appears in the picker as coming soon rather than silently
+# missing, because a vendor who cannot find their market assumes the tool is
+# broken rather than that it is honest about its coverage.
+
+default: kenya
+
+countries:
+
+  - code: kenya
+    name: Kenya
+    active: true
+    currency: KES
+    currency_symbol: KSh
+    # Marketplaces we have verified policy for. Ordering matters only for
+    # display; the comparison ranks by what the vendor keeps.
+    platforms:
+      retail:
+        - jumia_ke
+        - kilimall_ke
+      food:
+        - glovo_ke
+        - ubereats_ke
+    regulator: >-
+      Sellers must hold a KRA PIN and, above the VAT threshold, register for
+      VAT. Digital marketplaces withhold and remit under the Digital Service
+      Tax framework.
+    tax_note: >-
+      Commission figures here are exclusive of VAT. A vendor computing a
+      landed cost ceiling should confirm their own VAT position, because
+      whether they can reclaim input VAT changes the answer materially.
+
+  - code: tanzania
+    name: Tanzania
+    active: false
+    currency: TZS
+    currency_symbol: TSh
+    platforms:
+      retail: []
+      food: []
+    coming_soon: >-
+      We have not collected Tanzanian listings and have not verified any
+      Tanzanian commission schedule. Rather than show Kenyan figures under a
+      Tanzanian flag, we show nothing.
+
+  - code: uganda
+    name: Uganda
+    active: false
+    currency: UGX
+    currency_symbol: USh
+    platforms:
+      retail: []
+      food: []
+    coming_soon: >-
+      Not yet collected. Ugandan marketplace fees and last-mile costs differ
+      enough from Kenya's that borrowing them would be a fabrication.
+
+# ---------------------------------------------------------------------------
+# Which platforms to compare, by what is being sold.
+#
+# A vendor searching power banks does not want two food-delivery columns
+# saying "not applicable", and a vendor searching chicken does not want
+# Jumia. The pairing follows the product so they never have to think about
+# it, and the interface still lets them override.
+#
+# `default_kind` is what an unrecognised category falls back to. Retail is
+# the safer default: most of the taxonomy is retail, and showing a food
+# comparison for a mystery product would be the more confusing error.
+category_kinds:
+  default: retail
+  food:
+    - groceries
+    - fresh_produce
+    - prepared_food
+    - beverages

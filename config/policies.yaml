@@ -27,6 +27,7 @@ platforms:
   jumia_ke:
     name: Jumia Kenya
     source: "Jumia Kenya seller centre documentation and published fee schedule"
+    source_url: "https://sellercenter.jumia.co.ke/"
     read: 2026-09-09
 
     commission:
@@ -93,6 +94,7 @@ platforms:
   kilimall_ke:
     name: Kilimall Kenya
     source: "Kilimall Kenya seller documentation"
+    source_url: "https://seller.kilimall.co.ke/"
     read: 2026-09-09
 
     commission:
@@ -139,6 +141,7 @@ platforms:
   glovo_ke:
     name: Glovo Kenya
     source: "Glovo partner documentation"
+    source_url: "https://sell.glovoapp.com/ke"
     read: 2026-09-09
 
     commission:
@@ -184,6 +187,7 @@ platforms:
   ubereats_ke:
     name: Uber Eats
     source: "Not verified. We do not crawl this platform."
+    source_url: "https://merchants.ubereats.com/"
     read: 2026-09-09
 
     commission:

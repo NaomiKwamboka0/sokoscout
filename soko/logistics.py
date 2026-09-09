@@ -80,6 +80,20 @@ def counties(with_logistics_only: bool = False) -> list[dict[str, Any]]:
     return sorted(entries, key=lambda e: (e["tier"], e["name"]))
 
 
+def county(county_code: str | None) -> dict[str, Any] | None:
+    """One county's record, or None if we do not cover it.
+
+    Returns None rather than a placeholder, so a caller cannot accidentally
+    render a county we have no logistics for as though we did.
+    """
+    if not county_code:
+        return None
+    for entry in counties():
+        if entry["code"] == county_code:
+            return entry
+    return None
+
+
 def county_exists(county_code: str | None) -> bool:
     return bool(county_code) and county_code in _counties()
 

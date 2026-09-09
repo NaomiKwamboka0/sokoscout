@@ -80,6 +80,8 @@ def onboarding_answer(platform_code: str) -> dict[str, Any]:
     return {
         "available": True,
         "answered": True,
+            "source_url": entry.get("source_url"),
+            "source_name": entry.get("source"),
         "text": (
             f"To sell on {entry['name']} you need: {listed}.{timing}{cost_text} "
             f"Read from {entry['source']} on {_read_date(entry)}."
@@ -121,6 +123,8 @@ def payout_answer(platform_code: str) -> dict[str, Any]:
     return {
         "available": True,
         "answered": True,
+            "source_url": entry.get("source_url"),
+            "source_name": entry.get("source"),
         "text": f"{text} Read from {entry['source']} on {_read_date(entry)}.",
         "cycle_days": days,
     }
@@ -147,6 +151,8 @@ def returns_answer(platform_code: str) -> dict[str, Any]:
     return {
         "available": True,
         "answered": True,
+            "source_url": entry.get("source_url"),
+            "source_name": entry.get("source"),
         "text": (
             f"{entry['name']} allows returns within {window} days. "
             f"Who pays: {who}{note} "

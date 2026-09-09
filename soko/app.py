@@ -15,9 +15,10 @@ import html
 import json
 from datetime import date
 from pathlib import Path
+from urllib.parse import quote
 from typing import Any
 
-from fastapi import Cookie, Depends, FastAPI, Form, HTTPException, Request, Response
+from fastapi import Cookie, Depends, FastAPI, Form, HTTPException, Query, Request, Response
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 
 from soko.answer import Intent, route
@@ -34,7 +35,10 @@ from soko.auth import (
     verify_password,
 )
 from soko.classify import taxonomy
+from soko.compare import compare
 from soko.pipeline import JsonlStore, enrich, rollup
+from soko.search import all_categories, find_category, suggest_categories
+from soko import logistics, markets, ui
 
 app = FastAPI(title="SokoScout", docs_url=None, redoc_url=None)
 
@@ -124,191 +128,261 @@ def current_account(session: str | None = Cookie(default=None)) -> Account:
 # Pages
 # ---------------------------------------------------------------------------
 
-STYLE = """
-:root {
-  --ink: #14181f; --muted: #5b6472; --line: #e2e6ec; --bg: #ffffff;
-  --accent: #0b6b3a; --warn: #8a5a00; --warn-bg: #fdf6e7; --card: #f7f8fa;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0; background: var(--bg); color: var(--ink);
-  font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-}
-.wrap { max-width: 780px; margin: 0 auto; padding: 32px 20px 64px; }
-header { border-bottom: 1px solid var(--line); margin-bottom: 28px; padding-bottom: 16px;
-  display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
-h1 { font-size: 20px; margin: 0; letter-spacing: -0.01em; }
-h1 span { color: var(--muted); font-weight: 400; }
-.tier { font-size: 13px; color: var(--muted); }
-form.ask { display: flex; gap: 8px; margin: 0 0 28px; }
-input[type=text], input[type=email], input[type=password] {
-  flex: 1; padding: 11px 13px; border: 1px solid var(--line); border-radius: 7px;
-  font-size: 15px; font-family: inherit; color: var(--ink); background: #fff;
-}
-input:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: transparent; }
-button {
-  padding: 11px 20px; border: 0; border-radius: 7px; background: var(--accent);
-  color: #fff; font-size: 15px; font-weight: 500; cursor: pointer; font-family: inherit;
-}
-button:hover { background: #095a30; }
-.answer { padding: 18px 20px; border: 1px solid var(--line); border-radius: 9px;
-  margin-bottom: 16px; background: var(--card); }
-.answer p { margin: 0 0 10px; }
-.answer p:last-child { margin-bottom: 0; }
-.answer .evidence { font-size: 13.5px; color: var(--muted); }
-.refusal { border-color: #e8dcc0; background: var(--warn-bg); }
-.refusal .label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em;
-  color: var(--warn); font-weight: 600; margin-bottom: 6px; }
-table { width: 100%; border-collapse: collapse; font-size: 14.5px; margin-top: 8px; }
-th { text-align: left; font-weight: 600; font-size: 12.5px; text-transform: uppercase;
-  letter-spacing: 0.05em; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--line); }
-td { padding: 9px 10px; border-bottom: 1px solid var(--line); }
-td.num { text-align: right; font-variant-numeric: tabular-nums; }
-.thin td { color: var(--muted); }
-h2 { font-size: 15px; margin: 34px 0 10px; letter-spacing: -0.01em; }
-.hint { font-size: 13.5px; color: var(--muted); margin: 0 0 24px; }
-.hint code { background: var(--card); padding: 2px 6px; border-radius: 4px;
-  font-size: 12.5px; font-family: ui-monospace, monospace; }
-.examples { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 26px; }
-.examples a { font-size: 13px; padding: 5px 11px; border: 1px solid var(--line);
-  border-radius: 20px; color: var(--muted); text-decoration: none; }
-.examples a:hover { border-color: var(--accent); color: var(--accent); }
-.auth { max-width: 380px; margin: 60px auto; }
-.auth form { display: flex; flex-direction: column; gap: 11px; }
-.auth .error { color: #a12; font-size: 14px; margin: 0 0 6px; }
-.foot { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--line);
-  font-size: 13px; color: var(--muted); }
-"""
-
-
-def page(title: str, body: str) -> HTMLResponse:
-    return HTMLResponse(
-        f"<!doctype html><html lang=en><head><meta charset=utf-8>"
-        f"<meta name=viewport content='width=device-width,initial-scale=1'>"
-        f"<title>{html.escape(title)}</title><style>{STYLE}</style></head>"
-        f"<body><div class=wrap>{body}</div></body></html>"
-    )
-
-
 EXAMPLES = [
-    "What do phone cases sell for on Jumia?",
-    "Where should I sell, Jumia or Kilimall?",
+    "When do I get paid on Jumia?",
+    "What are the seller onboarding requirements?",
+    "What is the returns policy?",
     "What margin can I expect on power banks in Kisumu?",
     "Which categories are busiest?",
     "Where is there room in the market?",
-    "When do I get paid on Jumia?",
-    "What are the seller onboarding requirements?",
     "Can Jumia deliver to Mombasa?",
 ]
 
 
 @app.get("/", response_class=HTMLResponse)
-def home(session: str | None = Cookie(default=None)) -> HTMLResponse:
+def home(
+    q: str = "",
+    county: str = "nairobi",
+    country: str = "kenya",
+    platform: list[str] = Query(default=[]),
+    session: str | None = Cookie(default=None),
+) -> HTMLResponse:
+    """The compare tab: pick a product and a place, see the platforms."""
     if not session or hash_token(session) not in _SESSIONS:
         return RedirectResponse("/signin", status_code=303)
 
     account = current_account(session)
-    results = _rollups()
+    market = markets.country(country)
 
-    rows = []
-    for (category, platform), figures in sorted(results.items()):
-        if not account.may_see_platform(platform):
-            continue
-        if figures["available"]:
-            rows.append(
-                f"<tr><td>{html.escape(category.replace('_', ' '))}</td>"
-                f"<td class=num>KSh {figures['median']}</td>"
-                f"<td class=num>{figures['evidence']['observation_count']}</td>"
-                f"<td class=num>{figures['evidence']['seller_count']}</td>"
-                f"<td>{figures['saturation_label']}</td></tr>"
-            )
-        else:
-            rows.append(
-                f"<tr class=thin><td>{html.escape(category.replace('_', ' '))}</td>"
-                f"<td class=num colspan=4>too thin — "
-                f"{figures['observation_count']} of {figures['needed']} observations</td></tr>"
-            )
-
-    table = (
-        "<table><tr><th>Category</th><th class=num>Median</th>"
-        "<th class=num>Listings</th><th class=num>Sellers</th><th>Saturation</th></tr>"
-        + "".join(rows) + "</table>"
-        if rows else
-        "<p class=hint>Nothing collected yet. Run <code>python -m soko collect</code>.</p>"
+    pickers = ui.search_panel(
+        categories=all_categories(),
+        counties=logistics.counties(),
+        countries=[c.as_dict() for c in markets.countries()],
+        platforms=markets.all_platforms(market.code),
+        typed=q,
+        county=county,
+        country_code=market.code,
+        chosen=platform,
     )
+
+    head = ui.chrome(account.email, account.tier, "compare")
+
+    if not market.active:
+        # A country we have not collected says so, rather than showing Kenyan
+        # figures under another flag.
+        body = (
+            f"<div class=answer><p>We have not collected any "
+            f"{ui.e(market.name)} data yet.</p>"
+            f"<p class=ev>{ui.e(market.note)}</p></div>"
+        )
+        return HTMLResponse(ui.page("SokoScout", head + pickers + body))
+
+    if not q.strip():
+        return HTMLResponse(ui.page("SokoScout", head + pickers + _starting_point()))
+
+    match = find_category(q)
+    if not match:
+        return HTMLResponse(ui.page("SokoScout", head + pickers + _no_match(q)))
+
+    # A guess is shown as a guess. Silently answering about a different
+    # product than the vendor typed is the failure this product exists to
+    # avoid, and it would be invisible to them.
+    hint = "" if match.certain else ui.did_you_mean(
+        match.as_dict(), county, market.code
+    )
+
+    place = logistics.county(county) if county else None
+    rows = list(enrich(JsonlStore(DATA_FILE).read()))
+    allowed = [p for p in (platform or []) if account.may_see_platform(p)]
+
+    result = compare(
+        category_code=match.code,
+        category_label=match.label,
+        rows=rows,
+        rollups=_rollups(),
+        county_code=county or "nairobi",
+        county_label=(place or {}).get("name") if place else "Kenya",
+        country_code=market.code,
+        chosen_platforms=allowed or None,
+    )
+
+    return HTMLResponse(ui.page(
+        f"{match.label} - SokoScout",
+        head + pickers + hint + ui.comparison(result),
+    ))
+
+
+def _starting_point() -> str:
+    """Shown before a search, so the page is never blank."""
+    chips = "".join(
+        f"<a href='/?q={quote(c)}'>{ui.e(c)}</a>"
+        for c in ("power banks", "phone cases", "tv remote", "earbuds", "laptop")
+    )
+    return (
+        "<p class=note>Pick what you sell and where you deliver. We show each "
+        "platform's typical price, what it takes in fees, and what you keep.</p>"
+        f"<h2>Try one of these</h2><div class=chips>{chips}</div>"
+    )
+
+
+def _no_match(typed: str) -> str:
+    """A dead end that shows what we do have.
+
+    Listing the near misses is worth more than only saying no: a vendor who
+    typed something we do not track can usually reach what they meant in one
+    click.
+    """
+    near = suggest_categories(typed)
+    if near:
+        chips = "".join(
+            f"<a href='/?q={quote(m.label)}'>{ui.e(m.label)}</a>" for m in near
+        )
+        return (
+            f"<div class=did>We do not track &ldquo;{ui.e(typed)}&rdquo; yet. "
+            f"Did you mean one of these?</div><div class=chips>{chips}</div>"
+        )
 
     chips = "".join(
-        f"<a href='/ask?q={html.escape(q)}'>{html.escape(q)}</a>" for q in EXAMPLES
+        f"<a href='/?q={quote(c['label'])}'>{ui.e(c['label'])}</a>"
+        for c in all_categories()[:12]
     )
-
-    return page("SokoScout", f"""
-      <header>
-        <h1>SokoScout <span>· Kenyan marketplace prices</span></h1>
-        <div class=tier>{html.escape(account.email)} · {account.tier}</div>
-      </header>
-      <form class=ask action=/ask method=get>
-        <input type=text name=q placeholder="Ask about a price, a category, a margin…" autofocus>
-        <button type=submit>Ask</button>
-      </form>
-      <div class=examples>{chips}</div>
-      <h2>What we have collected</h2>
-      {table}
-      <p class=foot>Every figure states the listings and sellers behind it.
-      Where the data is too thin we say so rather than giving you a number.</p>
-    """)
+    return (
+        f"<div class=did>We do not track &ldquo;{ui.e(typed)}&rdquo; yet, and we "
+        f"would rather say so than show you a figure for something else.</div>"
+        f"<h2>What we do track</h2><div class=chips>{chips}</div>"
+    )
 
 
 @app.get("/ask", response_class=HTMLResponse)
 def ask_page(q: str = "", session: str | None = Cookie(default=None)) -> HTMLResponse:
+    """The Ask Soko tab: questions in words."""
     account = current_account(session)
-    answer_html = _answer_block(q, account) if q.strip() else ""
+    answer = _answer_block(q, account) if q.strip() else ""
 
-    chips = "".join(
-        f"<a href='/ask?q={html.escape(e)}'>{html.escape(e)}</a>" for e in EXAMPLES
+    chips = "".join(f"<a href='/ask?q={quote(x)}'>{ui.e(x)}</a>" for x in EXAMPLES)
+    heading = "Other things to ask" if q.strip() else "Things you can ask"
+
+    body = (
+        "<form class=panel method=get action=/ask>"
+        "<div class=fields style='grid-template-columns:1fr auto'>"
+        "<div class=field>"
+        "<label for=q>Ask anything about selling online in Kenya</label>"
+        f"<input type=text id=q name=q value=\"{ui.e(q)}\" autofocus "
+        "autocomplete=off placeholder=\"When do I get paid? "
+        "What margin on power banks?\">"
+        "</div>"
+        "<div class=field><button type=submit>Ask</button></div>"
+        "</div></form>"
+        f"{answer}"
+        f"<h2>{heading}</h2><div class=chips>{chips}</div>"
     )
 
-    return page("SokoScout", f"""
-      <header>
-        <h1><a href=/ style='color:inherit;text-decoration:none'>SokoScout</a></h1>
-        <div class=tier>{html.escape(account.email)} · {account.tier}</div>
-      </header>
-      <form class=ask action=/ask method=get>
-        <input type=text name=q value="{html.escape(q)}" autofocus>
-        <button type=submit>Ask</button>
-      </form>
-      {answer_html}
-      <div class=examples>{chips}</div>
-    """)
+    return HTMLResponse(ui.page(
+        "Ask Soko - SokoScout",
+        ui.chrome(account.email, account.tier, "ask") + body,
+    ))
+
+
+@app.get("/policies", response_class=HTMLResponse)
+def policies_page(session: str | None = Cookie(default=None)) -> HTMLResponse:
+    """Every platform's rules, each linking to the documentation it came from."""
+    account = current_account(session)
+
+    from soko.policies import known_platforms, policy as platform_policy
+
+    cards = []
+    for code in known_platforms():
+        entry = platform_policy(code) or {}
+        if not account.may_see_platform(code):
+            continue
+
+        commission = entry.get("commission") or {}
+        low, high = commission.get("range_low"), commission.get("range_high")
+        band = (
+            f"{low:.0%} to {high:.0%}"
+            if low is not None and high is not None
+            else "not confirmed"
+        )
+        payout = (entry.get("payout") or {}).get("cycle_days")
+        onboarding = entry.get("onboarding") or {}
+        returns = entry.get("returns") or {}
+
+        requirements = "".join(
+            f"<div class=row><span class=k>{ui.e(r)}</span></div>"
+            for r in (onboarding.get("requirements") or [])
+        ) or "<div class=row><span class=k>Not confirmed.</span></div>"
+
+        source = ""
+        if entry.get("source_url"):
+            source = (
+                f"<div class=src><a href='{ui.e(entry['source_url'])}' "
+                f"target=_blank rel=noopener>Seller documentation &nearr;</a>"
+                f" &middot; read {ui.e(entry.get('read', ''))}</div>"
+            )
+
+        cards.append(
+            f"<div class=col><h3>{ui.e(entry.get('name', code))}</h3>"
+            "<div class=rows>"
+            f"<div class=row><span class=k>Commission</span>"
+            f"<span class=v>{band}</span></div>"
+            f"<div class=row><span class=k>Paid after</span>"
+            f"<span class=v>{payout or '&mdash;'} days</span></div>"
+            f"<div class=row><span class=k>Returns window</span>"
+            f"<span class=v>{returns.get('window_days', '&mdash;')} days</span></div>"
+            f"<div class=row><span class=k>Approval takes</span>"
+            f"<span class=v>{onboarding.get('typical_days') or '&mdash;'} days</span>"
+            "</div></div>"
+            f"<div class=egs><div class=t>To sign up you need</div>"
+            f"<div class=rows>{requirements}</div></div>"
+            f"{source}</div>"
+        )
+
+    body = (
+        "<p class=note>What each platform charges and requires. Every figure "
+        "links to the seller documentation it came from, so you can check it "
+        "yourself.</p>"
+        f"<div class=cols>{''.join(cards)}</div>"
+    )
+
+    return HTMLResponse(ui.page(
+        "Policies - SokoScout",
+        ui.chrome(account.email, account.tier, "policies") + body,
+    ))
 
 
 def _answer_block(question: str, account: Account) -> str:
+    """One answer, with its evidence and a link to where it came from."""
     payload = answer_question(question, account)
 
     if not payload["answered"]:
         return (
-            f"<div class='answer refusal'><div class=label>Not answering that</div>"
-            f"<p>{html.escape(payload['text'])}</p></div>"
+            f"<div class='answer no'><div class=h>Not answering that</div>"
+            f"<p>{ui.e(payload['text'])}</p></div>"
         )
 
-    # The answer engine already appends the citation to the text, because a
-    # figure must never travel without its evidence and the CLI has nowhere
-    # else to put it. Rendering the evidence dict again here printed it twice.
-    #
-    # So split the citation off the end of the text and show it once, in its
-    # own muted element. Splitting rather than dropping keeps the rule that
-    # evidence is inseparable from the figure: if the sentence is ever absent,
-    # nothing is shown rather than the page inventing its own version.
+    # The answer engine appends the citation to the text, because a figure
+    # must never travel without its evidence and the CLI has nowhere else to
+    # put it. Split it off here so it renders once, in its own muted line.
     text = payload["text"]
     citation = ""
-
-    marker = "Based on "
-    index = text.rfind(marker)
+    index = text.rfind("Based on ")
     if index > 0:
         text, citation = text[:index].rstrip(), text[index:].strip()
 
-    body = f"<p>{html.escape(text)}</p>"
+    body = f"<p>{ui.e(text)}</p>"
     if citation:
-        body += f"<p class=evidence>{html.escape(citation)}</p>"
+        body += f"<p class=ev>{ui.e(citation)}</p>"
+
+    # Where a policy answered the question, link the documentation so the
+    # vendor can check it rather than taking our word for it.
+    source = payload.get("source_url")
+    if source:
+        body += (
+            f"<div class=cite>Source: <a href='{ui.e(source)}' target=_blank "
+            f"rel=noopener>{ui.e(payload.get('source_name', 'seller documentation'))}"
+            f" &nearr;</a></div>"
+        )
+
     return f"<div class=answer>{body}</div>"
 
 
@@ -358,6 +432,11 @@ def answer_question(question: str, account: Account) -> dict[str, Any]:
             "answered": wide.get("answered", True),
             "text": wide["text"],
             "intent": routed.intent.value,
+            # Policy answers know which document they came from. Carry it
+            # through so the page can link it rather than asking the vendor
+            # to take our word for a fee.
+            "source_url": wide.get("source_url"),
+            "source_name": wide.get("source_name"),
         }
 
     needs_category = routed.intent in {
@@ -430,21 +509,21 @@ def api_ask(q: str, account: Account = Depends(current_account)) -> JSONResponse
 
 @app.get("/signin", response_class=HTMLResponse)
 def signin_page(error: str = "") -> HTMLResponse:
-    error_html = f"<p class=error>{html.escape(error)}</p>" if error else ""
-    return page("Sign in · SokoScout", f"""
+    err = f"<p class=err>{ui.e(error)}</p>" if error else ""
+    return HTMLResponse(ui.page("Sign in - SokoScout", f"""
       <div class=auth>
-        <h1>SokoScout</h1>
-        <p class=hint>Kenyan marketplace prices, with the evidence attached.</p>
-        {error_html}
+        <div class=brand style='font-size:22px'>SokoScout</div>
+        <p class=note>Kenyan marketplace prices, with the evidence attached.</p>
+        {err}
         <form method=post action=/signin>
           <input type=email name=email placeholder="Email" required autofocus>
           <input type=password name=password placeholder="Password" required>
           <button type=submit>Sign in</button>
         </form>
-        <p class=hint style='margin-top:16px'>
+        <p class=note style='margin-top:16px'>
           No account? <a href=/signup>Start a 14 day free trial</a>.</p>
       </div>
-    """)
+    """))
 
 
 @app.post("/signin")
@@ -474,21 +553,22 @@ def signin(response: Response, email: str = Form(...), password: str = Form(...)
 
 @app.get("/signup", response_class=HTMLResponse)
 def signup_page(error: str = "") -> HTMLResponse:
-    error_html = f"<p class=error>{html.escape(error)}</p>" if error else ""
-    return page("Start a trial · SokoScout", f"""
+    err = f"<p class=err>{ui.e(error)}</p>" if error else ""
+    return HTMLResponse(ui.page("Start a trial - SokoScout", f"""
       <div class=auth>
-        <h1>Start a free trial</h1>
-        <p class=hint>Fourteen days, no card. Then from KSh 200 a month.</p>
-        {error_html}
+        <div class=brand style='font-size:22px'>Start a free trial</div>
+        <p class=note>Fourteen days, no card. Then from KSh 200 a month.</p>
+        {err}
         <form method=post action=/signup>
           <input type=email name=email placeholder="Email" required autofocus>
-          <input type=password name=password placeholder="Password, at least 10 characters" required>
+          <input type=password name=password
+                 placeholder="Password, at least 10 characters" required>
           <button type=submit>Start trial</button>
         </form>
-        <p class=hint style='margin-top:16px'>
+        <p class=note style='margin-top:16px'>
           Already have an account? <a href=/signin>Sign in</a>.</p>
       </div>
-    """)
+    """))
 
 
 @app.post("/signup")

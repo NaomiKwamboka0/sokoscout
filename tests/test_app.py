@@ -232,7 +232,7 @@ class TestAnswers:
         register(client)
         body = client.get("/ask?q=What+do+power+banks+cost").text
         assert "Based on" in body
-        assert "class=evidence" in body
+        assert "class=ev" in body
 
     def test_refuses_a_thin_category(self, client):
         register(client)
@@ -253,10 +253,23 @@ class TestAnswers:
         assert "could not tell which product category" in body
         assert "median price" not in body
 
-    def test_dashboard_marks_thin_categories(self, client):
+    def test_a_thin_category_says_so_in_its_column(self, client):
+        # The home page is a comparison now, not a table of every category.
+        # A platform without enough observations shows the shortfall in its
+        # own column rather than a price.
         register(client)
-        body = client.get("/").text
-        assert "too thin" in body
+        body = client.get("/?q=lipstick").text
+        assert "listings collected" in body
+        assert "before stating a price" in body
+
+    def test_a_platform_with_no_data_says_so_rather_than_borrowing(self, client):
+        # Kilimall has no collected listings in the fixture. Its column must
+        # say so; showing Jumia's median under Kilimall's name would be the
+        # fabrication the whole product exists to avoid.
+        register(client)
+        body = client.get("/?q=power+banks").text
+        assert "Kilimall" in body
+        assert "have not collected" in body
 
 
 class TestPolicyAndCostAnswers:
