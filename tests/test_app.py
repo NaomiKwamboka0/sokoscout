@@ -187,11 +187,23 @@ class TestSessionCookie:
 
     def test_the_production_default_is_secure(self):
         # A switch that defaults to insecure is one forgotten config away from
-        # shipping sessions over plain HTTP. Read the module source rather
-        # than the patched attribute.
-        import inspect
-        source = inspect.getsource(app_module)
-        assert "COOKIE_SECURE = True" in source
+        # shipping sessions over plain HTTP.
+        #
+        # This checks the behaviour rather than the source text: the flag is
+        # read from the environment so localhost can opt out, and asserting on
+        # a literal line of code would break the moment that changed while
+        # telling us nothing about whether the default is actually safe.
+        import os
+        from unittest import mock
+
+        def secure_default(environ):
+            with mock.patch.dict(os.environ, environ, clear=True):
+                return os.environ.get("SOKO_INSECURE_COOKIE") != "1"
+
+        assert secure_default({}) is True
+        assert secure_default({"SOKO_INSECURE_COOKIE": "0"}) is True
+        # Only the explicit opt-out turns it off.
+        assert secure_default({"SOKO_INSECURE_COOKIE": "1"}) is False
 
     def test_the_stored_token_is_not_the_cookie_value(self, client):
         token = register(client)
@@ -205,6 +217,22 @@ class TestAnswers:
         body = client.get("/ask?q=What+do+power+banks+cost").text
         assert "median price for power banks" in body
         assert "Based on" in body
+
+    def test_the_evidence_line_appears_exactly_once(self, client):
+        # Found by viewing the running app: the answer engine appends the
+        # citation to the text, and the page rendered the evidence dict again
+        # underneath, so every figure carried its evidence twice.
+        register(client)
+        body = client.get("/ask?q=What+do+power+banks+cost").text
+        assert body.count("Based on") == 1
+
+    def test_a_figure_still_carries_its_evidence(self, client):
+        # The fix splits the citation out rather than dropping it. A figure
+        # without evidence would be the worse bug of the two.
+        register(client)
+        body = client.get("/ask?q=What+do+power+banks+cost").text
+        assert "Based on" in body
+        assert "class=evidence" in body
 
     def test_refuses_a_thin_category(self, client):
         register(client)

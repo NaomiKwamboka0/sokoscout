@@ -38,7 +38,12 @@ from soko.pipeline import JsonlStore, enrich, rollup
 
 app = FastAPI(title="SokoScout", docs_url=None, redoc_url=None)
 
-DATA_FILE = Path("data/run.jsonl")
+import os
+
+# Which collected observations to serve. Set SOKO_DATA to point at a different
+# run without editing code, so a demo and a live crawl can be served from the
+# same checkout.
+DATA_FILE = Path(os.environ.get("SOKO_DATA", "data/run.jsonl"))
 
 # Secure cookies are sent only over HTTPS, which is correct in production and
 # makes the cookie invisible to a test client talking plain HTTP to an ASGI
@@ -47,7 +52,14 @@ DATA_FILE = Path("data/run.jsonl")
 # This is a switch rather than a relaxation: it defaults to True, so the
 # insecure setting has to be asked for explicitly and cannot be reached by
 # forgetting to configure something. Nothing in the deployed path sets it.
-COOKIE_SECURE = True
+# A Secure cookie is only sent over HTTPS, which is correct in production and
+# means the session cookie is silently dropped when running on plain HTTP at
+# localhost: you would sign in and land straight back on the sign-in page.
+#
+# Opt out explicitly with SOKO_INSECURE_COOKIE=1 for local viewing. It defaults
+# to secure, so the unsafe setting has to be asked for and cannot be reached by
+# forgetting to configure something.
+COOKIE_SECURE = os.environ.get("SOKO_INSECURE_COOKIE") != "1"
 
 
 def _set_session_cookie(response: Response, token: str) -> None:
@@ -278,16 +290,26 @@ def _answer_block(question: str, account: Account) -> str:
             f"<p>{html.escape(payload['text'])}</p></div>"
         )
 
-    evidence = payload.get("evidence") or {}
+    # The answer engine already appends the citation to the text, because a
+    # figure must never travel without its evidence and the CLI has nowhere
+    # else to put it. Rendering the evidence dict again here printed it twice.
+    #
+    # So split the citation off the end of the text and show it once, in its
+    # own muted element. Splitting rather than dropping keeps the rule that
+    # evidence is inseparable from the figure: if the sentence is ever absent,
+    # nothing is shown rather than the page inventing its own version.
+    text = payload["text"]
     citation = ""
-    if evidence:
-        citation = (
-            f"<p class=evidence>Based on {evidence['observation_count']:,} listings "
-            f"from {evidence['seller_count']:,} sellers on "
-            f"{html.escape(', '.join(evidence['platforms']))}, "
-            f"collected {html.escape(evidence['collected_on'])}.</p>"
-        )
-    return f"<div class=answer><p>{html.escape(payload['text'])}</p>{citation}</div>"
+
+    marker = "Based on "
+    index = text.rfind(marker)
+    if index > 0:
+        text, citation = text[:index].rstrip(), text[index:].strip()
+
+    body = f"<p>{html.escape(text)}</p>"
+    if citation:
+        body += f"<p class=evidence>{html.escape(citation)}</p>"
+    return f"<div class=answer>{body}</div>"
 
 
 # ---------------------------------------------------------------------------
