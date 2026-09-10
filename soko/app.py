@@ -38,7 +38,7 @@ from soko.classify import taxonomy
 from soko.compare import compare
 from soko.pipeline import JsonlStore, enrich, rollup
 from soko.search import all_categories, find_category, suggest_categories
-from soko import logistics, markets, ui
+from soko import live, logistics, markets, ui
 
 app = FastAPI(title="SokoScout", docs_url=None, redoc_url=None)
 
@@ -64,6 +64,15 @@ DATA_FILE = Path(os.environ.get("SOKO_DATA", "data/run.jsonl"))
 # to secure, so the unsafe setting has to be asked for and cannot be reached by
 # forgetting to configure something.
 COOKIE_SECURE = os.environ.get("SOKO_INSECURE_COOKIE") != "1"
+
+# Whether a thin category triggers a live fetch from the marketplaces.
+#
+# On by default, because a vendor asking about a category we have not
+# collected should get an answer rather than an apology. Off in tests, where
+# reaching the network would make the suite slow, flaky and dependent on
+# somebody else's uptime, and would put load on a live site every time
+# anybody ran pytest.
+LIVE_FETCH = os.environ.get("SOKO_LIVE") != "0"
 
 
 def _set_session_cookie(response: Response, token: str) -> None:
@@ -196,24 +205,69 @@ def home(
     )
 
     place = logistics.county(county) if county else None
-    rows = list(enrich(JsonlStore(DATA_FILE).read()))
     allowed = [p for p in (platform or []) if account.may_see_platform(p)]
+    wanted = markets.platforms_to_compare(match.code, market.code, allowed or None)
+
+    store = JsonlStore(DATA_FILE)
+    rows = list(enrich(store.read()))
+
+    # Fetch what the vendor actually asked for, if we do not already hold
+    # enough of it.
+    #
+    # The sitemap crawl walks the catalogue by recency, never by category, so
+    # a vendor searching a category we have not happened upon gets nothing
+    # while the store holds hundreds of rows about other things. Waiting for
+    # a background crawl to reach them is not an answer to their question.
+    #
+    # Only when short: a category already over the threshold is served from
+    # the store, which keeps the common case instant and means the live fetch
+    # only runs where it changes the answer.
+    reports = []
+    if LIVE_FETCH and _short_of_evidence(rows, match.code, wanted):
+        reports = live.refresh(match.code, wanted, store)
+        if any(r.found for r in reports):
+            rows = list(enrich(store.read()))
 
     result = compare(
         category_code=match.code,
         category_label=match.label,
         rows=rows,
-        rollups=_rollups(),
+        rollups=rollup(rows) if rows else {},
         county_code=county or "nairobi",
         county_label=(place or {}).get("name") if place else "Kenya",
         country_code=market.code,
         chosen_platforms=allowed or None,
     )
 
+    note = live.summarise(reports)
+    if note:
+        hint += f"<div class=live>{ui.e(note)}</div>"
+
     return HTMLResponse(ui.page(
         f"{match.label} - SokoScout",
         head + pickers + hint + ui.comparison(result),
     ))
+
+
+def _short_of_evidence(rows, category_code: str, platform_codes: list[str]) -> bool:
+    """Whether any wanted platform is below the threshold for this category.
+
+    Counts what is already stored rather than asking the rollup, because the
+    rollup has already thrown away everything under thirty and the question
+    here is precisely whether we are under it.
+    """
+    from soko.aggregate import MIN_OBSERVATIONS
+
+    for code in platform_codes:
+        held = sum(
+            1 for r in rows
+            if r.get("category_code") == category_code
+            and r.get("platform_code") == code
+            and r.get("aggregatable")
+        )
+        if held < MIN_OBSERVATIONS:
+            return True
+    return False
 
 
 def _starting_point() -> str:

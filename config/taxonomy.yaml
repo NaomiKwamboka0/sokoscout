@@ -258,8 +258,26 @@ categories:
     commission_read: 2026-09-09
     keywords:
       - television
+      # A live category fetch returned 51 televisions that none of the
+      # original three keywords matched, because sellers write the panel
+      # technology or the operating system rather than the phrase "smart
+      # tv": "SMART ANDROID QLED HD TV" has smart and tv four words apart.
+      #
+      # Deliberately still two-word forms rather than a bare "tv", which
+      # would collide with every tv_accessories keyword.
       - smart tv
       - led tv
+      - android tv
+      - google tv
+      - qled tv
+      - oled tv
+      - uhd tv
+      - hd tv
+      - digital tv
+      - frameless tv
+      - inch tv
+      - qled
+      - inch smart
       - fridge
       - refrigerator
       - deep freezer

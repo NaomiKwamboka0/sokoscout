@@ -85,6 +85,83 @@ platforms:
       sitemaps:
         - https://static.jumia.co.ke/index-sitemap.xml
         - https://www.jumia.co.ke/slp/nc/sitemap/sitemap.xml
+    # Category listing pages, for fetching what a vendor actually asked for
+    # instead of waiting for the sitemap walk to reach it. One page carries
+    # about forty products, which is what makes a live fetch quick enough to
+    # run on a click.
+    #
+    # Clean paths only. Jumia disallows roughly two hundred query parameters,
+    # so there is no search endpoint we may use here; every path below was
+    # loaded and confirmed to return that category products.
+    category_paths:
+      # Verified 2026-09-10: each path was loaded and its contents confirmed
+      # to be the category claimed. A path that merely returns HTTP 200 is
+      # not enough. /furniture/ returns 200 and serves books; /audio-video/
+      # returns 200 and silently serves the whole electronics hub; several
+      # legacy power-bank slugs return 200 with two out-of-stock products,
+      # which is noise a median should never be built from.
+      phone_accessories:
+        - /mobile-phone-cases-covers/
+        - /mobile-phone-screen-protectors/
+      power_banks:
+        - /phones-battery-packs/
+        - /mobile-phone-battery-chargers/
+      audio:
+        - /mobile-phone-bluetooth-headsets/
+        - /bluetooth-speakers/
+      smartphones:
+        - /smartphones/
+      fashion_womens:
+        - /womens-fashion/
+        - /womens-dresses/
+      fashion_mens:
+        - /mens-fashion/
+      # Jumia splits shoes by gender and has no unified hub, so both halves
+      # are collected or the median describes women's shoes only.
+      footwear:
+        - /womens-shoes/
+        - /mens-shoes/
+      beauty:
+        - /health-beauty/
+        - /womens-make-up/
+      home_kitchen:
+        - /home-kitchen-dining/
+      electronics_home:
+        - /televisions/
+        - /home-improvement-appliances/
+        - /small-appliances/
+      # Brackets and decoders, deliberately NOT the parent
+      # /electronic-television-video/: that one also contains televisions,
+      # which would drag an accessory median up by an order of magnitude.
+      tv_accessories:
+        - /tv-ceiling-wall-mounts/
+        - /digital-tv-converters/
+      toys_games:
+        - /toys-games/
+      baby_kids:
+        - /baby-products/
+      bags_luggage:
+        - /womens-bags/
+        - /luggage-travel-gear/
+      computing:
+        - /computing/
+        - /laptops/
+      # Storage and shelving only. Sofas and wardrobes sit under separate
+      # slugs that have not been verified, so they are left out rather than
+      # guessed at.
+      storage_furniture:
+        - /home-kitchen-storage-organization/
+      sports_outdoor:
+        - /sporting-goods/
+      pet_supplies:
+        - /pet-supplies/
+      tools_hardware:
+        - /tools-home-improvement/
+      musical_instruments:
+        - /musical-instruments/
+      innerwear:
+        - /womens-lingerie-sleep-lounge/
+        - /mens-underwear/
 
   - code: kilimall_ke
     name: Kilimall Kenya
@@ -113,11 +190,12 @@ platforms:
     # The lesson is the same one Jumia taught: read the file, do not infer
     # the policy from the shape of the URLs.
     access:
-      # Facets, sorts and tracking parameters. Kilimall's own disallow list
-      # includes /login?* and /skuPrice*, so parameterised views are clearly
-      # not wanted, and they add nothing anyway: the canonical /listing/ page
-      # already carries the price we came for.
-      disallow_query_strings: true
+      # Facets on PRODUCT pages add nothing: the canonical /listing/ page
+      # already carries the price. But Kilimall's robots does not ban query
+      # strings generally, and /search is not in its disallow list, so a
+      # blanket ban here would refuse the one endpoint that lets us collect
+      # a category a vendor actually asked for. Narrowed accordingly.
+      disallow_query_strings: false
       allowed_paths:
         - /listing/
       disallowed_prefixes:
@@ -146,6 +224,10 @@ platforms:
       sitemap_index: https://www.kilimall.co.ke/sitemap-index.xml
       sitemaps:
         - https://www.kilimall.co.ke/sitemap-index.xml
+    # For fetching a category a vendor actually asked for, rather than
+    # waiting for the sitemap walk to happen upon it. Robots permits
+    # /search; what it disallows is /product*, /item* and /new/goods*.
+    search_url: "https://www.kilimall.co.ke/search?q={q}"
 
   - code: glovo_ke
     name: Glovo Kenya

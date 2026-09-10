@@ -58,6 +58,11 @@ def clean_state(tmp_path, monkeypatch):
     # session; the flag itself is asserted separately in TestSessionCookie,
     # which reads the Set-Cookie header rather than round-tripping it.
     monkeypatch.setattr(app_module, "COOKIE_SECURE", False)
+
+    # No test may reach a marketplace. A suite that hits the network is slow,
+    # flaky, and puts load on somebody else's site every time anyone runs
+    # pytest. The live path has its own tests with a stubbed fetcher.
+    monkeypatch.setattr(app_module, "LIVE_FETCH", False)
     yield
 
 

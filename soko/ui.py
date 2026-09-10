@@ -88,6 +88,8 @@ button:hover{background:#085530}
 .did{background:var(--warn-bg);border:1px solid var(--warn-line);
   border-radius:9px;padding:11px 15px;margin-bottom:18px;font-size:14px}
 .did a{font-weight:600}
+.live{background:var(--accent-soft);border:1px solid #cfe4d8;border-radius:9px;
+  padding:10px 15px;margin-bottom:18px;font-size:13.5px;color:var(--accent)}
 
 .verdict{background:var(--accent-soft);border:1px solid #cfe4d8;
   border-radius:10px;padding:15px 18px;margin-bottom:20px;font-size:15px}
