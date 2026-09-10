@@ -26,19 +26,42 @@ platforms:
 
   jumia_ke:
     name: Jumia Kenya
-    source: "Jumia Kenya seller centre documentation and published fee schedule"
-    source_url: "https://sellercenter.jumia.co.ke/"
+    source: "Jumia Kenya VendorHub published commission sheet"
+    source_url: "https://vendorhub.jumia.co.ke/"
     read: 2026-09-09
 
     commission:
       # Per-category rates live in taxonomy.yaml, which is what the margin
       # calculator reads. This is the range, for the comparison view.
-      range_low: 0.05
-      range_high: 0.13
+      # taxonomy.yaml's per-category rates ARE this platform's schedule, so
+      # they may be used directly. No other platform may borrow them.
+      per_category_rates_apply: true
+      range_low: 0.06
+      range_high: 0.20
+      # Verified against the published per-category sheet at
+      # vendorhub.jumia.co.ke/commissions-2026-sheet/ on 2026-09-10. That
+      # table has over a thousand rows; the span below is what it actually
+      # covers, replacing an earlier 5-13% guess that was too narrow at both
+      # ends.
+      verified: 2026-09-10
+      published_examples:
+        android_phones: 0.06
+        smart_tvs: 0.08
+        computers_monitors: 0.08
+        tablets: 0.10
+        fridges_freezers: 0.10
+        large_appliances: 0.10
+        small_appliances: 0.12
+        audio_hifi: 0.12
+        shoes: 0.15
+        luggage: 0.15
+        underwear: 0.15
+        fragrance: 0.18
       note: >-
-        Varies by category. Electronics and phones sit at the low end because
-        the ticket size is large; fashion, beauty and accessories at the high
-        end. The per-category figure is in taxonomy.yaml.
+        Published per category, from 6% on Android phones to 20% at the top
+        of the range. Electronics sit low because the ticket size is large;
+        fashion, beauty and fragrance sit high. The per-category figure used
+        in margin answers is in taxonomy.yaml.
 
     fees:
       - name: Commission
@@ -94,16 +117,30 @@ platforms:
   kilimall_ke:
     name: Kilimall Kenya
     source: "Kilimall Kenya seller documentation"
-    source_url: "https://seller.kilimall.co.ke/"
+    source_url: "https://seller.kilimall.ke/create-seller-account/step1"
     read: 2026-09-09
 
     commission:
-      range_low: 0.05
-      range_high: 0.12
+      # NOT CONFIRMED, and deliberately left null.
+      #
+      # Kilimall's own commission page renders as an empty JavaScript app and
+      # their old help domain no longer resolves, so there is no primary
+      # source. The 5-15% figure repeated across blogs was here as a range
+      # and has been removed: it would have fed a margin calculation about a
+      # vendor committing real stock, and a plausible number from a blog is
+      # exactly the confidently-wrong answer this product exists to refuse.
+      #
+      # Kilimall states the rate in-account under Shop Information, so the
+      # honest instruction is to read it there.
+      range_low: null
+      range_high: null
+      checked: 2026-09-10
       note: >-
-        Broadly comparable to Jumia and slightly lower in several categories.
-        Kilimall's smaller buyer base is the offsetting factor, so a lower
-        commission on fewer orders is not automatically the better deal.
+        Kilimall does not publish its commission rates anywhere we can read.
+        Their rate page loads empty and their help domain no longer resolves.
+        You will see your actual rate in Seller Center under Shop
+        Information once registered. We would rather say we do not know than
+        quote a figure from a blog for a decision about your money.
 
     fees:
       - name: Commission
@@ -141,7 +178,7 @@ platforms:
   glovo_ke:
     name: Glovo Kenya
     source: "Glovo partner documentation"
-    source_url: "https://sell.glovoapp.com/ke"
+    source_url: "https://sell.glovoapp.com/ke/en/"
     read: 2026-09-09
 
     commission:
@@ -187,17 +224,27 @@ platforms:
   ubereats_ke:
     name: Uber Eats
     source: "Not verified. We do not crawl this platform."
-    source_url: "https://merchants.ubereats.com/"
+    source_url: "https://merchants.ubereats.com/ke/en/s/signup/merchants/"
     read: 2026-09-09
 
     commission:
-      range_low: null
-      range_high: null
+      range_low: 0.14
+      range_high: 0.30
+      # Read from merchants.ubereats.com/ke/en/pricing/ on 2026-09-10. These
+      # are headline plan rates published on a Kenya-localised page, not an
+      # estimate.
+      verified: 2026-09-10
+      published_examples:
+        marketplace_premium_delivery: 0.30
+        marketplace_premium_pickup: 0.10
+        self_delivery: 0.14
+        self_delivery_pickup: 0.14
       note: >-
-        Not confirmed. Uber Eats refuses non-browser requests and is bot
-        protected, so we have no verified figures for it and will not quote
-        an estimate. It is listed here so a vendor asking about it is told we
-        do not cover it, rather than finding it silently missing.
+        Published plan rates: 30% on Premium delivery and 10% on Premium
+        pickup, or 14% on either if you deliver yourself. Uber Direct charges
+        a flat fee per delivery instead of a commission, and that amount is
+        not published. We do not crawl Uber Eats listings, so we can quote
+        these fees but have no price data to compare against.
 
     fees: []
     payout:

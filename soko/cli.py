@@ -91,11 +91,17 @@ def collect(
     if platform == "jumia_ke":
         from soko.sources.jumia import JumiaDriver
         driver = JumiaDriver()
+    elif platform == "kilimall_ke":
+        from soko.sources.kilimall import KilimallDriver
+        driver = KilimallDriver()
     else:
         _emit(
             {
                 "ok": False,
-                "error": f"No driver for platform {platform!r}. Built: jumia_ke.",
+                "error": (
+                    f"No driver for platform {platform!r}. "
+                    f"Built: jumia_ke, kilimall_ke."
+                ),
             },
             exit_code=1,
         )

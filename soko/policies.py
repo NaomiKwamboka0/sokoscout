@@ -245,9 +245,21 @@ def platform_cost(
 
     unconfirmed: list[str] = []
 
-    rate = category_commission(category_code) if category_code else None
+    # The per-category rates in taxonomy.yaml are Jumia's published schedule.
+    # They are only valid for Jumia.
+    #
+    # Applying them to another platform was a real bug: Kilimall, which
+    # publishes no commission rate anywhere we can read, was being costed at
+    # Jumia's 11% on power banks and producing a confident net receipt from a
+    # figure that describes a different company. That is the same failure as
+    # borrowing another platform's price, and harder to see because the
+    # arithmetic is correct.
+    band = entry.get("commission") or {}
+    rate = None
+    if category_code and band.get("per_category_rates_apply"):
+        rate = category_commission(category_code)
+
     if rate is None:
-        band = entry.get("commission") or {}
         low, high = band.get("range_low"), band.get("range_high")
         if low is not None and high is not None:
             # Midpoint of the published band, clearly flagged. Better than

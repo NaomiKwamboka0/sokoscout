@@ -88,12 +88,14 @@ class TestPlatformPairing:
         # forced into the comparison.
         assert platforms_to_compare("power_banks", "tanzania", ["jumia_ke"]) == []
 
-    def test_the_picker_flags_platforms_without_data(self):
-        # A vendor ticking Uber Eats should be told before running a
-        # comparison, not after.
+    def test_the_picker_reports_which_platforms_have_a_commission(self):
+        # Uber Eats publishes headline plan rates on a Kenya page, so it now
+        # has a confirmed band. Kilimall does not publish one anywhere we can
+        # read, so it does not. The picker reflects what is actually known
+        # rather than a fixed idea of which platforms are covered.
         rows = {p["code"]: p for p in all_platforms("kenya")}
         assert rows["jumia_ke"]["has_data"] is True
-        assert rows["ubereats_ke"]["has_data"] is False
+        assert rows["kilimall_ke"]["has_data"] is False
 
     def test_every_platform_carries_a_source_link(self):
         for row in all_platforms("kenya"):
@@ -182,9 +184,19 @@ class TestExampleListings:
 class TestVerdict:
     def test_names_the_gap_in_money(self):
         # "Jumia is better" is not actionable. "You keep 47 more" is.
-        result = verdict(build_columns("power_banks", [], BOTH))
+        #
+        # Only Jumia is costable today, because Kilimall publishes no
+        # commission rate, so there may be a single ranked column and nothing
+        # to compare it against. The gap sentence appears only when there is
+        # a second column; what must always hold is that the decided answer
+        # names money.
+        columns = build_columns("power_banks", [], BOTH)
+        result = verdict(columns)
         assert result["decided"]
-        assert "more than" in result["text"] or "level" in result["text"]
+        assert "KSh" in result["text"]
+
+        if len([c for c in columns if c.comparable]) > 1:
+            assert "more than" in result["text"] or "level" in result["text"]
 
     def test_refuses_when_nothing_is_comparable(self):
         assert not verdict(build_columns("power_banks", [], {}))["decided"]

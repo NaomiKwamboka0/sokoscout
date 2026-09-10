@@ -156,7 +156,10 @@ class TestRollup:
         results = rollup(list(enrich(store.read())))
 
         caveats = results[("power_banks", "kilimall_ke")]["evidence"]["caveats"]
-        assert any("Category level" in c for c in caveats)
+        # Kilimall used to be category-level, on a misreading of its robots
+        # file. It is product-level now, and its caveat is about missing
+        # commission rates instead.
+        assert any("commission" in c.lower() for c in caveats)
 
     def test_separates_platforms(self, store):
         store.write(power_banks(40))

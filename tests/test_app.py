@@ -276,10 +276,13 @@ class TestPolicyAndCostAnswers:
     """The policy, cost comparison and activity features, through the web."""
 
     def test_platform_cost_comparison(self, client):
+        # Kilimall publishes no commission rate, so the answer may name a
+        # single costable platform rather than a winner over a rival. Either
+        # way it must state money and say what it could not compare.
         register(client)
         body = client.get("/ask?q=Where+should+I+sell+Jumia+or+Kilimall").text
-        assert "leaves you the most" in body
-        assert "per unit" in body
+        assert "KSh" in body
+        assert "leaves you the most" in body or "not confirmed" in body
 
     def test_payout_question(self, client):
         register(client)

@@ -45,8 +45,14 @@ header{display:flex;justify-content:space-between;align-items:baseline;
   gap:16px;padding:22px 0 0}
 .brand{font-size:19px;font-weight:650;letter-spacing:-.02em}
 .brand span{color:var(--muted);font-weight:400;font-size:14px}
-.who{font-size:13px;color:var(--muted)}
+.who{font-size:13px;color:var(--muted);display:flex;align-items:center;
+  gap:12px;flex-wrap:wrap;justify-content:flex-end}
 .who a{color:var(--muted)}
+.market{display:flex;align-items:center;gap:6px;margin:0}
+.market label{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;
+  color:var(--faint);font-weight:600}
+.market select{padding:5px 9px;font-size:13px;border:1px solid var(--line);
+  border-radius:7px;background:#fff;color:var(--ink);width:auto;cursor:pointer}
 
 nav{display:flex;gap:2px;margin:20px 0 26px;border-bottom:1px solid var(--line)}
 nav a{padding:9px 18px;font-size:14.5px;font-weight:500;text-decoration:none;
@@ -56,7 +62,7 @@ nav a.on{color:var(--accent);border-bottom-color:var(--accent)}
 
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:11px;
   padding:18px;margin-bottom:22px}
-.fields{display:grid;grid-template-columns:1.6fr 1fr 1fr auto;gap:11px;align-items:end}
+.fields{display:grid;grid-template-columns:1.7fr 1.1fr auto;gap:11px;align-items:end}
 @media(max-width:760px){.fields{grid-template-columns:1fr}}
 .field{display:flex;flex-direction:column;gap:5px;min-width:0}
 label{font-size:12px;font-weight:600;text-transform:uppercase;
@@ -169,22 +175,54 @@ def page(title: str, body: str) -> str:
     )
 
 
-def chrome(email: str, tier: str, tab: str) -> str:
-    """Header and tab bar, shared by both pages."""
+def chrome(
+    email: str,
+    tier: str,
+    tab: str,
+    countries: list[dict[str, Any]] | None = None,
+    country_code: str = "kenya",
+) -> str:
+    """Header, country selector and tab bar, shared by every page.
+
+    Ask Soko sits first because it is where a vendor who does not yet know
+    what to search goes, and burying it behind the comparison made it look
+    like an afterthought.
+
+    The country selector lives in the header rather than inside the search
+    panel: it applies to the whole session, not to one query, and every
+    figure below it is only true for the market selected.
+    """
     def link(href: str, label: str, key: str) -> str:
         on = " class=on" if tab == key else ""
         return f"<a href='{href}'{on}>{label}</a>"
 
+    picker = ""
+    if countries:
+        options = "".join(
+            f"<option value='{e(c['code'])}'"
+            f"{' selected' if c['code'] == country_code else ''}"
+            f"{'' if c['active'] else ' disabled'}>"
+            f"{e(c['name'])}{'' if c['active'] else ' — soon'}</option>"
+            for c in countries
+        )
+        picker = (
+            "<form class=market method=get action=/ id=mk>"
+            "<label for=hdr-country>Selling in</label>"
+            "<select id=hdr-country name=country "
+            "onchange=\"document.getElementById('mk').submit()\">"
+            f"{options}</select></form>"
+        )
+
     return (
         f"<header><div class=brand>SokoScout "
-        f"<span>&middot; Kenyan marketplace prices</span></div>"
-        f"<div class=who>{e(email)} &middot; {e(tier)} &middot; "
-        f"<a href=/signout onclick=\"event.preventDefault();"
+        f"<span>&middot; marketplace prices, with the evidence</span></div>"
+        f"<div class=who>{picker}<span>{e(email)} &middot; {e(tier)}</span>"
+        f"<a href=# onclick=\"event.preventDefault();"
         f"document.getElementById('so').submit()\">sign out</a>"
         f"<form id=so method=post action=/signout hidden></form></div></header>"
-        f"<nav>{link('/', 'Compare', 'compare')}"
-        f"{link('/ask', 'Ask Soko', 'ask')}"
-        f"{link('/policies', 'Policies', 'policies')}</nav>"
+        f"<nav>{link('/ask', 'Ask Soko', 'ask')}"
+        f"{link('/', 'Compare prices', 'compare')}"
+        f"{link('/policies', 'Fees &amp; rules', 'policies')}</nav>"
     )
 
 
@@ -228,14 +266,6 @@ def search_panel(
         + county_options
     )
 
-    country_options = "".join(
-        f"<option value='{e(c['code'])}'"
-        f"{' selected' if c['code'] == country_code else ''}"
-        f"{'' if c['active'] else ' disabled'}>"
-        f"{e(c['name'])}{'' if c['active'] else ' (soon)'}</option>"
-        for c in countries
-    )
-
     picked = set(chosen or [])
     ticks = []
     for p in platforms:
@@ -262,11 +292,8 @@ def search_panel(
           <label for=county>Delivering to</label>
           <select id=county name=county>{county_options}</select>
         </div>
-        <div class=field>
-          <label for=country>Country</label>
-          <select id=country name=country>{country_options}</select>
-        </div>
         <div class=field><button type=submit>Compare</button></div>
+        <input type=hidden name=country value="{e(country_code)}">
       </div>
       <div class=picks>
         <span class=lab>Platforms</span>
@@ -324,7 +351,26 @@ def comparison(result: dict[str, Any]) -> str:
             headline = "<div class=big>&mdash;<small>no price yet</small></div>"
 
         rows = ""
-        if col["comparable"]:
+        if col["median_kes"] and not col["comparable"]:
+            # A price but no commission, which is Kilimall today. Showing the
+            # price alone is genuinely useful for judging where to position
+            # against the market, so the column keeps it and says plainly
+            # which half is missing rather than going blank.
+            rows = (
+                "<div class=rows>"
+                "<div class=row><span class=k>Commission</span>"
+                "<span class=v>not published</span></div>"
+                f"<div class=row><span class=k>Delivery to "
+                f"{e(result['county_label'])}</span>"
+                f"<span class=v>{_money(symbol, col['delivery_kes'])}</span></div>"
+                "<div class='row keep'><span class=k>You keep</span>"
+                "<span class=v style='color:var(--muted);font-size:13.5px'>"
+                "cannot say</span></div>"
+                f"<div class=row><span class=k>Paid after</span>"
+                f"<span class=v>{col['payout_days'] or '&mdash;'} days</span></div>"
+                "</div>"
+            )
+        elif col["comparable"]:
             fees = "".join(
                 f"<div class=row><span class=k>{e(f['name'])}</span>"
                 f"<span class=v>&minus;{_money(symbol, f['amount_kes'])}</span></div>"

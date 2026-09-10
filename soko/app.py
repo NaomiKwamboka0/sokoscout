@@ -165,7 +165,11 @@ def home(
         chosen=platform,
     )
 
-    head = ui.chrome(account.email, account.tier, "compare")
+    head = ui.chrome(
+        account.email, account.tier, "compare",
+        countries=[c.as_dict() for c in markets.countries()],
+        country_code=market.code,
+    )
 
     if not market.active:
         # A country we have not collected says so, rather than showing Kenyan
@@ -254,7 +258,11 @@ def _no_match(typed: str) -> str:
 
 
 @app.get("/ask", response_class=HTMLResponse)
-def ask_page(q: str = "", session: str | None = Cookie(default=None)) -> HTMLResponse:
+def ask_page(
+    q: str = "",
+    country: str = "kenya",
+    session: str | None = Cookie(default=None),
+) -> HTMLResponse:
     """The Ask Soko tab: questions in words."""
     account = current_account(session)
     answer = _answer_block(q, account) if q.strip() else ""
@@ -279,12 +287,19 @@ def ask_page(q: str = "", session: str | None = Cookie(default=None)) -> HTMLRes
 
     return HTMLResponse(ui.page(
         "Ask Soko - SokoScout",
-        ui.chrome(account.email, account.tier, "ask") + body,
+        ui.chrome(
+            account.email, account.tier, "ask",
+            countries=[c.as_dict() for c in markets.countries()],
+            country_code=country,
+        ) + body,
     ))
 
 
 @app.get("/policies", response_class=HTMLResponse)
-def policies_page(session: str | None = Cookie(default=None)) -> HTMLResponse:
+def policies_page(
+    country: str = "kenya",
+    session: str | None = Cookie(default=None),
+) -> HTMLResponse:
     """Every platform's rules, each linking to the documentation it came from."""
     account = current_account(session)
 
@@ -346,7 +361,11 @@ def policies_page(session: str | None = Cookie(default=None)) -> HTMLResponse:
 
     return HTMLResponse(ui.page(
         "Policies - SokoScout",
-        ui.chrome(account.email, account.tier, "policies") + body,
+        ui.chrome(
+            account.email, account.tier, "policies",
+            countries=[c.as_dict() for c in markets.countries()],
+            country_code=country,
+        ) + body,
     ))
 
 

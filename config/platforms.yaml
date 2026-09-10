@@ -88,24 +88,64 @@ platforms:
 
   - code: kilimall_ke
     name: Kilimall Kenya
-    granularity: category
+    granularity: product
     active: true
     base_url: https://www.kilimall.co.ke
     caveat: >-
-      Category level only. Kilimall's robots file disallows product pages, so
-      this price is a category range rather than a product median. Treat it as
-      coarser than the Jumia equivalent.
+      Kilimall does not publish its seller commission rates anywhere we can
+      read, so we can tell you what its products sell for but not what you
+      would keep after fees. Your actual commission appears in Seller Center
+      once you register.
+    # Read from the live robots.txt on 2026-09-10, and it corrects an earlier
+    # guess in this file that had /listing/ under disallowed_prefixes.
+    #
+    # Their file opens with "Allow all user agents" and then disallows
+    # specific paths. Four of them look like product paths:
+    #
+    #   /product*   /item*   /new/goods*   /api/*
+    #
+    # which reads at first as "do not crawl the catalogue". It is not.
+    # Kilimall's canonical product URL is /listing/<id>-<slug>, which appears
+    # in none of the disallow rules, and they publish 102 sitemaps of exactly
+    # those URLs from their own sitemap index. A platform that lists URLs in
+    # its own sitemap is asking for them to be read.
+    #
+    # The lesson is the same one Jumia taught: read the file, do not infer
+    # the policy from the shape of the URLs.
     access:
+      # Facets, sorts and tracking parameters. Kilimall's own disallow list
+      # includes /login?* and /skuPrice*, so parameterised views are clearly
+      # not wanted, and they add nothing anyway: the canonical /listing/ page
+      # already carries the price we came for.
+      disallow_query_strings: true
       allowed_paths:
-        - /new/category/
-      disallowed_prefixes:
         - /listing/
-        - /product/
-        - /item/
+      disallowed_prefixes:
+        - /product
+        - /item
+        - /new/goods
         - /api/
+        - /user-center
+        - /orders
+        - /checkout
+        - /shopping-cart
+        - /login
+        - /address
+        - /setting
+        - /voucher
+        - /coins
+        - /reviews-publish
+        - /deepLink
+        - /skuPrice
+        - /player-video
+        - /newUserUrl
+      # No published crawl-delay, so this is our own restraint rather than
+      # their limit: about 30 requests a minute.
       delay_seconds: 2.0
+      timeout_seconds: 30
+      sitemap_index: https://www.kilimall.co.ke/sitemap-index.xml
       sitemaps:
-        - https://www.kilimall.co.ke/sitemap.xml
+        - https://www.kilimall.co.ke/sitemap-index.xml
 
   - code: glovo_ke
     name: Glovo Kenya
